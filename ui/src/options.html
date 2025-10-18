@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nix Forge - Configuration Options Browser</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="resources/bootstrap.min.css">
+  <style>
+    html, body { height: 100%; margin: 0; }
+    #elm-main { height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="elm-main"></div>
+  <script src="options.js"></script>
+  <script>
+    var app = Elm.OptionsMain.init({
+      node: document.getElementById('elm-main')
+    });
+
+    // Handle copy to clipboard
+    app.ports.copyToClipboard.subscribe(function(text) {
+      navigator.clipboard.writeText(text).then(function() {
+        console.log('Copied to clipboard successfully!');
+      }).catch(function(err) {
+        console.error('Failed to copy to clipboard:', err);
+      });
+    });
+  </script>
+</body>
+</html>

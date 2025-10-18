@@ -30,11 +30,11 @@
                 }
               );
           };
-          html = pkgs.runCommand "options.html" { buildInputs = [ pkgs.pandoc ]; } ''
-            pandoc ${doc.optionsCommonMark} -o $out
+          options = pkgs.runCommand "options.json" { } ''
+            cp ${doc.optionsJSON}/share/doc/nixos/options.json $out
           '';
         in
-        html;
+        options;
     in
 
     {
@@ -44,11 +44,13 @@
           text = builtins.toJSON config.forge;
         };
 
-        _forge-options-apps = optionsDoc [ ./modules/apps.nix ];
-        _forge-options-packages = optionsDoc [ ./modules/packages.nix ];
+        _forge-options = optionsDoc [
+          ./modules/apps.nix
+          ./modules/packages.nix
+        ];
 
         _forge-ui = pkgs.callPackage ../ui/package.nix {
-          inherit (config.packages) _forge-config _forge-options-apps _forge-options-packages;
+          inherit (config.packages) _forge-config _forge-options;
         };
       };
     };

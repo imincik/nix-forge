@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  mypkgs,
   ...
 }:
 
@@ -13,7 +12,7 @@
 
   programs = {
     requirements = [
-      mypkgs.hello
+      pkgs.mypkgs.hello
     ];
   };
 
@@ -21,7 +20,7 @@
     images = [
       {
         name = "hello-english";
-        requirements = [ mypkgs.hello ];
+        requirements = [ pkgs.mypkgs.hello ];
         config.CMD = [
           "hello"
           "--greeting"
@@ -30,7 +29,7 @@
       }
       {
         name = "hello-italian";
-        requirements = [ mypkgs.hello ];
+        requirements = [ pkgs.mypkgs.hello ];
         config.CMD = [
           "hello"
           "--greeting"
@@ -39,7 +38,7 @@
       }
       {
         name = "hello-spanish";
-        requirements = [ mypkgs.hello ];
+        requirements = [ pkgs.mypkgs.hello ];
         config.CMD = [
           "hello"
           "--greeting"
@@ -53,7 +52,7 @@
   vm = {
     name = "hello";
     requirements = [
-      mypkgs.hello
+      pkgs.mypkgs.hello
     ];
   };
 }

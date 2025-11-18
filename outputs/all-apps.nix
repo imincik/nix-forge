@@ -16,9 +16,13 @@ in
     }@args:
 
     let
-      recipes = callRecipes (args // {
-        # Add mypkgs as extra recipe argument
+      # Extend pkgs with mypkgs containing Nix Forge packages
+      pkgsExtended = pkgs // {
         mypkgs = config.packages;
+      };
+
+      recipes = callRecipes (args // {
+        pkgs = pkgsExtended;
       });
     in
     {

@@ -22,7 +22,12 @@ This specification guides LLMs in generating Nix Forge recipes - declarative con
 
 ### Basic Template
 ```nix
-{ config, lib, pkgs, mypkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Recipe fields go here
@@ -30,6 +35,21 @@ This specification guides LLMs in generating Nix Forge recipes - declarative con
 ```
 
 **Note**: The function parameters are REQUIRED and should always be included, even if not used.
+
+### Accessing Nix Forge Packages
+
+Other packages built by Nix Forge can be referenced in recipes using `pkgs.mypkgs`:
+
+```nix
+{
+  # Reference another Nix Forge package
+  requirements.build = [
+    pkgs.mypkgs.gdal  # Access gdal from Nix Forge
+  ];
+}
+```
+
+This follows the same pattern as accessing nixpkgs packages (e.g., `pkgs.sqlite`).
 
 ### Important: Git Tracking Required
 
@@ -256,7 +276,7 @@ build.extraDrvAttrs = {
 ```nix
 programs = {
   requirements = [
-    mypkgs.my-package  # Reference packages from forge
+    pkgs.mypkgs.my-package  # Reference packages from forge
     pkgs.curl
   ];
 };
@@ -268,7 +288,7 @@ containers = {
   images = [
     {
       name = "api-server";
-      requirements = [ mypkgs.my-package ];
+      requirements = [ pkgs.mypkgs.my-package ];
       config.CMD = [ "my-package" "--serve" ];
     }
   ];
@@ -281,13 +301,13 @@ containers = {
 vm = {
   enable = true;
   name = "my-vm";
-  requirements = [ mypkgs.my-package ];
+  requirements = [ pkgs.mypkgs.my-package ];
   config = {
     ports = [ "8080:8080" ];
     system = {
       services.postgresql.enable = true;
       systemd.services.my-service = {
-        script = "${mypkgs.my-package}/bin/my-package";
+        script = "${pkgs.mypkgs.my-package}/bin/my-package";
         wantedBy = [ "multi-user.target" ];
       };
     };

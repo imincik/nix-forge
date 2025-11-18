@@ -22,7 +22,12 @@ This specification guides LLMs in generating Nix Forge recipes - declarative con
 
 ### Basic Template
 ```nix
-{ config, lib, pkgs, mypkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Recipe fields go here
@@ -30,6 +35,21 @@ This specification guides LLMs in generating Nix Forge recipes - declarative con
 ```
 
 **Note**: The function parameters are REQUIRED and should always be included, even if not used.
+
+### Accessing Nix Forge Packages
+
+Other packages built by Nix Forge can be referenced in recipes using `pkgs.mypkgs`:
+
+```nix
+{
+  # Reference another Nix Forge package
+  requirements.build = [
+    pkgs.mypkgs.gdal  # Access gdal from Nix Forge
+  ];
+}
+```
+
+This follows the same pattern as accessing nixpkgs packages (e.g., `pkgs.sqlite`).
 
 ### Important: Git Tracking Required
 
@@ -85,10 +105,14 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 {
   build.standardBuilder = {
     enable = true;
-    requirements = {
-      native = [ pkgs.cmake pkgs.pkg-config ];  # Build-time tools
-      build = [ pkgs.openssl pkgs.zlib ];       # Runtime dependencies
-    };
+    requirements.native = [
+      pkgs.cmake
+      pkgs.pkg-config
+    ];
+    requirements.build = [
+      pkgs.openssl
+      pkgs.zlib
+    ];
   };
 }
 ```
@@ -105,10 +129,12 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 {
   build.plainBuilder = {
     enable = true;
-    requirements = {
-      native = [ pkgs.cmake ];
-      build = [ pkgs.somelib ];
-    };
+    requirements.native = [
+      pkgs.cmake
+    ];
+    requirements.build = [
+      pkgs.somelib
+    ];
     configure = ''
       mkdir build && cd build
       cmake -DCMAKE_INSTALL_PREFIX=$out ..
@@ -138,13 +164,13 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 {
   build.pythonAppBuilder = {
     enable = true;
-    requirements = {
-      build-system = [ pkgs.python3Packages.setuptools ];
-      dependencies = [
-        pkgs.python3Packages.flask
-        pkgs.python3Packages.requests
-      ];
-    };
+    requirements.build-system = [
+      pkgs.python3Packages.setuptools
+    ];
+    requirements.dependencies = [
+      pkgs.python3Packages.flask
+      pkgs.python3Packages.requests
+    ];
   };
 }
 ```
@@ -250,7 +276,7 @@ build.extraDrvAttrs = {
 ```nix
 programs = {
   requirements = [
-    mypkgs.my-package  # Reference packages from forge
+    pkgs.mypkgs.my-package  # Reference packages from forge
     pkgs.curl
   ];
 };
@@ -262,7 +288,7 @@ containers = {
   images = [
     {
       name = "api-server";
-      requirements = [ mypkgs.my-package ];
+      requirements = [ pkgs.mypkgs.my-package ];
       config.CMD = [ "my-package" "--serve" ];
     }
   ];
@@ -275,13 +301,13 @@ containers = {
 vm = {
   enable = true;
   name = "my-vm";
-  requirements = [ mypkgs.my-package ];
+  requirements = [ pkgs.mypkgs.my-package ];
   config = {
     ports = [ "8080:8080" ];
     system = {
       services.postgresql.enable = true;
       systemd.services.my-service = {
-        script = "${mypkgs.my-package}/bin/my-package";
+        script = "${pkgs.mypkgs.my-package}/bin/my-package";
         wantedBy = [ "multi-user.target" ];
       };
     };
@@ -338,7 +364,13 @@ source.hash = "";  # Leave empty initially
 
 ### Pattern 1: Simple GitHub Project
 ```nix
-{ config, lib, pkgs, mypkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  mypkgs,
+  ...
+}:
 
 {
   name = "ripgrep";
@@ -354,10 +386,11 @@ source.hash = "";  # Leave empty initially
 
   build.standardBuilder = {
     enable = true;
-    requirements = {
-      native = [ pkgs.rustc pkgs.cargo ];
-      build = [ ];
-    };
+    requirements.native = [
+      pkgs.rustc
+      pkgs.cargo
+    ];
+    requirements.build = [ ];
   };
 
   test.script = ''
@@ -368,7 +401,13 @@ source.hash = "";  # Leave empty initially
 
 ### Pattern 2: C Project with Dependencies
 ```nix
-{ config, lib, pkgs, mypkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  mypkgs,
+  ...
+}:
 
 {
   name = "nginx";
@@ -384,10 +423,14 @@ source.hash = "";  # Leave empty initially
 
   build.standardBuilder = {
     enable = true;
-    requirements = {
-      native = [ pkgs.which ];
-      build = [ pkgs.openssl pkgs.pcre pkgs.zlib ];
-    };
+    requirements.native = [
+      pkgs.which
+    ];
+    requirements.build = [
+      pkgs.openssl
+      pkgs.pcre
+      pkgs.zlib
+    ];
   };
 
   test.script = ''
@@ -398,7 +441,13 @@ source.hash = "";  # Leave empty initially
 
 ### Pattern 3: Python Application
 ```nix
-{ config, lib, pkgs, mypkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  mypkgs,
+  ...
+}:
 
 {
   name = "mypy";
@@ -414,13 +463,13 @@ source.hash = "";  # Leave empty initially
 
   build.pythonAppBuilder = {
     enable = true;
-    requirements = {
-      build-system = [ pkgs.python3Packages.setuptools ];
-      dependencies = [
-        pkgs.python3Packages.typing-extensions
-        pkgs.python3Packages.mypy-extensions
-      ];
-    };
+    requirements.build-system = [
+      pkgs.python3Packages.setuptools
+    ];
+    requirements.dependencies = [
+      pkgs.python3Packages.typing-extensions
+      pkgs.python3Packages.mypy-extensions
+    ];
   };
 
   test.script = ''

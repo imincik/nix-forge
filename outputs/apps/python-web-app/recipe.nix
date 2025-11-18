@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  mypkgs,
   ...
 }:
 
@@ -43,7 +42,7 @@
     images = [
       {
         name = "api";
-        requirements = [ mypkgs.python-web ];
+        requirements = [ pkgs.mypkgs.python-web ];
         config.CMD = [
           "python-web"
         ];
@@ -65,7 +64,7 @@
         host all all ::0/0 trust
       '';
       # api service
-      systemd.services.api.script = "${mypkgs.python-web}/bin/python-web";
+      systemd.services.api.script = "${pkgs.mypkgs.python-web}/bin/python-web";
       systemd.services.api.wantedBy = [
         "multi-user.target"
       ];

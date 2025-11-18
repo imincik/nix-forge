@@ -20,12 +20,10 @@
 
   build.plainBuilder = {
     enable = true;
-    requirements = {
-      native = [
-        pkgs.cmake
-        pkgs.ninja
-      ];
-    };
+    requirements.native = [
+      pkgs.cmake
+      pkgs.ninja
+    ];
     configure = ''
       mkdir build && cd build
 

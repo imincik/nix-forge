@@ -85,10 +85,14 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 {
   build.standardBuilder = {
     enable = true;
-    requirements = {
-      native = [ pkgs.cmake pkgs.pkg-config ];  # Build-time tools
-      build = [ pkgs.openssl pkgs.zlib ];       # Runtime dependencies
-    };
+    requirements.native = [
+      pkgs.cmake
+      pkgs.pkg-config
+    ];
+    requirements.build = [
+      pkgs.openssl
+      pkgs.zlib
+    ];
   };
 }
 ```
@@ -105,10 +109,12 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 {
   build.plainBuilder = {
     enable = true;
-    requirements = {
-      native = [ pkgs.cmake ];
-      build = [ pkgs.somelib ];
-    };
+    requirements.native = [
+      pkgs.cmake
+    ];
+    requirements.build = [
+      pkgs.somelib
+    ];
     configure = ''
       mkdir build && cd build
       cmake -DCMAKE_INSTALL_PREFIX=$out ..
@@ -138,13 +144,13 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 {
   build.pythonAppBuilder = {
     enable = true;
-    requirements = {
-      build-system = [ pkgs.python3Packages.setuptools ];
-      dependencies = [
-        pkgs.python3Packages.flask
-        pkgs.python3Packages.requests
-      ];
-    };
+    requirements.build-system = [
+      pkgs.python3Packages.setuptools
+    ];
+    requirements.dependencies = [
+      pkgs.python3Packages.flask
+      pkgs.python3Packages.requests
+    ];
   };
 }
 ```
@@ -338,7 +344,13 @@ source.hash = "";  # Leave empty initially
 
 ### Pattern 1: Simple GitHub Project
 ```nix
-{ config, lib, pkgs, mypkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  mypkgs,
+  ...
+}:
 
 {
   name = "ripgrep";
@@ -354,10 +366,11 @@ source.hash = "";  # Leave empty initially
 
   build.standardBuilder = {
     enable = true;
-    requirements = {
-      native = [ pkgs.rustc pkgs.cargo ];
-      build = [ ];
-    };
+    requirements.native = [
+      pkgs.rustc
+      pkgs.cargo
+    ];
+    requirements.build = [ ];
   };
 
   test.script = ''
@@ -368,7 +381,13 @@ source.hash = "";  # Leave empty initially
 
 ### Pattern 2: C Project with Dependencies
 ```nix
-{ config, lib, pkgs, mypkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  mypkgs,
+  ...
+}:
 
 {
   name = "nginx";
@@ -384,10 +403,14 @@ source.hash = "";  # Leave empty initially
 
   build.standardBuilder = {
     enable = true;
-    requirements = {
-      native = [ pkgs.which ];
-      build = [ pkgs.openssl pkgs.pcre pkgs.zlib ];
-    };
+    requirements.native = [
+      pkgs.which
+    ];
+    requirements.build = [
+      pkgs.openssl
+      pkgs.pcre
+      pkgs.zlib
+    ];
   };
 
   test.script = ''
@@ -398,7 +421,13 @@ source.hash = "";  # Leave empty initially
 
 ### Pattern 3: Python Application
 ```nix
-{ config, lib, pkgs, mypkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  mypkgs,
+  ...
+}:
 
 {
   name = "mypy";
@@ -414,13 +443,13 @@ source.hash = "";  # Leave empty initially
 
   build.pythonAppBuilder = {
     enable = true;
-    requirements = {
-      build-system = [ pkgs.python3Packages.setuptools ];
-      dependencies = [
-        pkgs.python3Packages.typing-extensions
-        pkgs.python3Packages.mypy-extensions
-      ];
-    };
+    requirements.build-system = [
+      pkgs.python3Packages.setuptools
+    ];
+    requirements.dependencies = [
+      pkgs.python3Packages.typing-extensions
+      pkgs.python3Packages.mypy-extensions
+    ];
   };
 
   test.script = ''

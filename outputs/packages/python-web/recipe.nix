@@ -20,14 +20,12 @@
 
   build.pythonAppBuilder = {
     enable = true;
-    requirements = {
-      build-system = [
-        pkgs.python3Packages.setuptools
-      ];
-      dependencies = [
-        pkgs.python3Packages.flask
-        pkgs.python3Packages.psycopg2
-      ];
-    };
+    requirements.build-system = [
+      pkgs.python3Packages.setuptools
+    ];
+    requirements.dependencies = [
+      pkgs.python3Packages.flask
+      pkgs.python3Packages.psycopg2
+    ];
   };
 }

@@ -20,14 +20,12 @@
 
   build.standardBuilder = {
     enable = true;
-    requirements = {
-      native = [
-        pkgs.cmake
-      ];
-      build = [
-        pkgs.proj
-      ];
-    };
+    requirements.native = [
+      pkgs.cmake
+    ];
+    requirements.build = [
+      pkgs.proj
+    ];
   };
 
   test.script = ''

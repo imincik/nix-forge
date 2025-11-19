@@ -315,7 +315,7 @@ httpErrorToString err =
 initialInstructionsHtml : Html Msg
 initialInstructionsHtml =
     div []
-        [ h2 [] [ text "CREATE RECIPE" ]
+        [ h2 [] [ text "NEW RECIPE" ]
         , p [ style "margin-bottom" "0em" ] [ text "A. Configure options and click 'Create recipe'" ]
         , br [] []
         , p [ style "margin-bottom" "0em" ] [ text "B. Or, generate package and application recipes using LLM" ]
@@ -362,7 +362,7 @@ instructionsHtml category options =
                 , codeBlock (newRecipeFile ("outputs/apps/" ++ newAppName options ++ "/recipe.nix") recipeContent)
                 , codeBlock (addFileToGitCmd ("outputs/apps/" ++ newAppName options ++ "/recipe.nix"))
                 , p [] [ text "3. Test build" ]
-                , codeBlock (buildPackageCmd (newAppName options))
+                , codeBlock (buildAppCmd (newAppName options))
                 , p [] [ text "4. Submit PR" ]
                 , codeBlock (addFileToGitCmd ("outputs/apps/" ++ newAppName options ++ "/recipe.nix"))
                 , codeBlock (submitPRCmd (newAppName options))
@@ -817,17 +817,27 @@ newRecipeFile filename recipeContent =
 
 addFileToGitCmd : String -> String
 addFileToGitCmd filename =
-    "git add " ++ filename
+    format "git add {0}" [ filename ]
 
 
 buildPackageCmd : String -> String
 buildPackageCmd package =
-    "nix build .#" ++ package ++ " -L"
+    format """nix build .#{0} -L
+nix build .#{0}.image -L
+""" [ package ]
+
+
+buildAppCmd : String -> String
+buildAppCmd package =
+    format """nix build .#{0} -L
+nix build .#{0}.containers -L
+nix build .#{0}.vm -L
+""" [ package ]
 
 
 runPackageTestCmd : String -> String
 runPackageTestCmd package =
-    "nix build .#" ++ package ++ ".test -L"
+    format "nix build .#{0}.test -L" [ package ]
 
 
 submitPRCmd : String -> String

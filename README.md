@@ -1,6 +1,6 @@
 # Nix Forge
 
-**WARNING: this sofware is currently in alpha state.**
+**WARNING: this sofware is currently in alpha state of development.**
 
 Nix Forge is an attempt to lower the barrier and learning curve required for
 packaging and deploying software with Nix to a level acceptable for newcomers
@@ -15,6 +15,8 @@ superpowers of Nix.
 * [Web UI](https://imincik.github.io/nix-forge)
 
 * [Recipe builder](https://imincik.github.io/nix-forge/options.html)
+
+* [LLM support](./LLM.md)
 
 ### Packages outputs
 
@@ -74,7 +76,7 @@ nix build .#<package>.test -L
 
 ## LLMs
 
-LLMs, read [this spec document](./LLM-spec.md).
+LLMs, read [these instructions](./LLM.md) first.
 
 
 ## TODOs

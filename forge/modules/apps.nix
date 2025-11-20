@@ -42,6 +42,8 @@ in
                   "apps.*.vm.requirements"
                   "apps.*.vm.config.system"
                   "apps.*.vm.config.ports"
+                  "apps.*.vm.memorySize"
+                  "apps.*.vm.diskSize"
                 ];
               };
               description = "Defines which options are relevant for each app output type.";
@@ -152,6 +154,18 @@ in
                           '';
                         };
                       };
+                      memorySize = lib.mkOption {
+                        type = lib.types.int;
+                        default = 1024 * 2;
+                        description = "VM memory size in MB.";
+                        example = 1024 * 4;
+                      };
+                      diskSize = lib.mkOption {
+                        type = lib.types.int;
+                        default = 1024 * 4;
+                        description = "VM disk size in MB.";
+                        example = 1024 * 10;
+                      };
                     };
                   };
                 }
@@ -245,8 +259,8 @@ in
                         networking.useDHCP = lib.mkForce true;
                         networking.firewall.enable = lib.mkForce false;
                         virtualisation.graphics = false;
-                        virtualisation.memorySize = 1024 * 2;
-                        virtualisation.diskSize = 1024 * 4;
+                        virtualisation.memorySize = app.vm.memorySize;
+                        virtualisation.diskSize = app.vm.diskSize;
                         virtualisation.forwardPorts = forwardPortsAttrs app.vm.config.ports;
                         system.stateVersion = "25.11";
                       } app.vm.config.system

@@ -193,6 +193,52 @@
     "readOnly": false,
     "type": "string"
   },
+  "apps.*.vm.config.diskSize": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "4096"
+    },
+    "description": "VM disk size in MB.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "10240"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "apps",
+      "*",
+      "vm",
+      "config",
+      "diskSize"
+    ],
+    "readOnly": false,
+    "type": "signed integer"
+  },
+  "apps.*.vm.config.memorySize": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "2048"
+    },
+    "description": "VM memory size in MB.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "4096"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "apps",
+      "*",
+      "vm",
+      "config",
+      "memorySize"
+    ],
+    "readOnly": false,
+    "type": "signed integer"
+  },
   "apps.*.vm.config.ports": {
     "declarations": [],
     "default": {
@@ -656,7 +702,7 @@
     "declarations": [],
     "default": {
       "_type": "literalExpression",
-      "text": "''\n  echo -e \"\\nWelcome. This environment contains all dependencies required\"\n  echo \"to build this software from source.\"\n  echo\n  echo \"Now, navigate to the source code directory and you are all set to\"\n  echo \"start hacking.\"\n''"
+      "text": "''\n  echo -e \"\\nWelcome. This environment contains all dependencies required\"\n  echo \"to build $DEVENV_PACKAGE_NAME from source.\"\n  echo\n  echo \"Grab the source code from $DEVENV_PACKAGE_SOURCE\"\n  echo \"or from the upstream repository and you are all set to start hacking.\"\n''"
     },
     "description": "This option has no description.",
     "loc": [

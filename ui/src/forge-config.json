@@ -2,6 +2,34 @@
   "apps": [
     {
       "containers": {
+        "composeFile": null,
+        "enable": false,
+        "images": []
+      },
+      "description": "OCI-compliant container registry for Nix Forge.",
+      "name": "forge-registry-app",
+      "programs": {
+        "enable": true,
+        "requirements": [
+          "/nix/store/7rj1254n0xcqrsccydjy45cncn0bwmcv-forge-registry-0.1.0"
+        ]
+      },
+      "usage": "This service provides a OCI-compliant container registry for Nix Forge\nand allows to load Nix Forge containers directly to Docker, Podman or\nKubernetes.\n\n1. Deploy registry in a shell environment (see instructions below)\n   and launch it\n```\n  forge-registry\n```\n\n2. Launch example package container with Podman\n```\n  podman run -it --tls-verify=false \\\n  localhost:6443/packages/hello:latest\n```\n\n3. Launch example application with Podman\n```\n  podman run -it --tls-verify=false \\\n  localhost:6443/applications/python-web-app/api:latest\n```\n\n4. Launch example application with Kubernetes\n```\n  kubectl run python-web \\\n  --image=localhost:6443/applications/python-web-app/api:latest\n```\n",
+      "version": "0.1.0",
+      "vm": {
+        "config": {
+          "diskSize": 4096,
+          "memorySize": 2048,
+          "ports": [],
+          "system": {}
+        },
+        "enable": false,
+        "name": "nixos-vm",
+        "requirements": []
+      }
+    },
+    {
+      "containers": {
         "composeFile": "/nix/store/nw6szwqhv08zh1891y1a6pc0gbk6mwvc-compose.yaml",
         "enable": true,
         "images": [
@@ -156,6 +184,69 @@
     ]
   },
   "packages": [
+    {
+      "build": {
+        "debug": false,
+        "extraDrvAttrs": {},
+        "pythonAppBuilder": {
+          "disabledTests": [],
+          "enable": true,
+          "importsCheck": [
+            "app",
+            "registry"
+          ],
+          "relaxDeps": [],
+          "requirements": {
+            "build-system": [
+              "/nix/store/bq3172qx0c68yv0i4wy51y1bzln4wndr-python3.13-setuptools-80.9.0",
+              "/nix/store/vj5yjbg0cqlbc45mgx6npmxjxkib0rpi-python3.13-wheel-0.46.1"
+            ],
+            "dependencies": [
+              "/nix/store/khxpw9ys6n3byzxrwwavfs0c1qpwcjym-python3.13-flask-3.1.2"
+            ],
+            "optional-dependencies": {}
+          }
+        },
+        "pythonPackageBuilder": {
+          "disabledTests": [],
+          "enable": false,
+          "importsCheck": [],
+          "relaxDeps": [],
+          "requirements": {
+            "build-system": [],
+            "dependencies": [],
+            "optional-dependencies": {}
+          }
+        },
+        "standardBuilder": {
+          "enable": false,
+          "requirements": {
+            "build": [],
+            "native": []
+          }
+        }
+      },
+      "description": "OCI-compliant container registry for Nix Forge.",
+      "development": {
+        "requirements": [],
+        "shellHook": "echo -e \"\\nWelcome. This environment contains all dependencies required\"\necho \"to build $DEVENV_PACKAGE_NAME from source.\"\necho\necho \"Grab the source code from $DEVENV_PACKAGE_SOURCE\"\necho \"or from the upstream repository and you are all set to start hacking.\"\n"
+      },
+      "homePage": "https://github.com/imincik/nix-forge-registry",
+      "mainProgram": "forge-registry",
+      "name": "forge-registry",
+      "source": {
+        "git": "github:imincik/nix-forge-registry/master",
+        "hash": "sha256-rQI1i0l+c8tyt4qSWwSFDPuyO6/euDCvjWSoTk1JFPU=",
+        "patches": [],
+        "path": null,
+        "url": null
+      },
+      "test": {
+        "requirements": [],
+        "script": "echo \"Test script\"\n"
+      },
+      "version": "0.1.0"
+    },
     {
       "build": {
         "debug": false,

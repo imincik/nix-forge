@@ -228,10 +228,10 @@ in
                         type = lib.types.str;
                         default = ''
                           echo -e "\nWelcome. This environment contains all dependencies required"
-                          echo "to build this software from source."
+                          echo "to build $DEVENV_PACKAGE_NAME from source."
                           echo
-                          echo "Now, navigate to the source code directory and you are all set to"
-                          echo "start hacking."
+                          echo "Grab the source code from $DEVENV_PACKAGE_SOURCE"
+                          echo "or from the upstream repository and you are all set to start hacking."
                         '';
                       };
                     };
@@ -293,6 +293,8 @@ in
                   };
                 };
                 devenv = pkgs.mkShell {
+                  env.DEVENV_PACKAGE_NAME = "${pkg.name}";
+                  env.DEVENV_PACKAGE_SOURCE = "${finalPkg.src}";
                   inputsFrom = [
                     finalPkg
                   ];

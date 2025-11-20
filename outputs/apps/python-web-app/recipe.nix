@@ -13,12 +13,12 @@
     This is a simple example app which provides a web API to manage a list of
     users.
 
-    * Initialize database
+    1. Initialize database
     ```
       curl -X POST localhost:5000/init
     ```
 
-    * Add a new user
+    2. Add a new user
     ```
       curl -X POST \
         --header "Content-Type: application/json" \
@@ -26,7 +26,7 @@
       localhost:5000/users
     ```
 
-    * Get list of all users
+    3. Get list of all users
     ```
       curl localhost:5000/users
     ```

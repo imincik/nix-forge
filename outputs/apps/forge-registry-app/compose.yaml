@@ -1,0 +1,11 @@
+services:
+  registry:
+    image: localhost/forge-registry:latest
+    environment:
+      - FLASK_HOST=0.0.0.0
+      - FLASK_PORT=6443
+      - GITHUB_REPO=github:imincik/nix-forge
+    ports:
+      - 6443:6443
+    profiles:
+      - services

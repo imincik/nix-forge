@@ -9,7 +9,8 @@ type alias OptionsFilter =
 
 
 type alias Config =
-    { apps : List App
+    { repositoryUrl : String
+    , apps : List App
     , packages : List Package
     , packagesFilter : OptionsFilter
     , appsFilter : OptionsFilter
@@ -47,7 +48,8 @@ optionsFilterDecoder =
 
 configDecoder : Decode.Decoder Config
 configDecoder =
-    Decode.map4 Config
+    Decode.map5 Config
+        (Decode.field "repositoryUrl" Decode.string)
         (Decode.field "apps" (Decode.list appDecoder))
         (Decode.field "packages" (Decode.list packageDecoder))
         (Decode.field "packagesFilter" optionsFilterDecoder)

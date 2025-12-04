@@ -14,9 +14,12 @@
       perSystem =
         { ... }:
         {
-          forge.recipeDirs = {
-            packages = ./recipes/packages;
-            apps = ./recipes/apps;
+          forge = {
+            repositoryUrl = "github:me/my-forge";
+            recipeDirs = {
+              packages = ./recipes/packages;
+              apps = ./recipes/apps;
+            };
           };
         };
     };

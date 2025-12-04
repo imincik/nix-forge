@@ -36,7 +36,7 @@ jobs:
       - name: Initialize project from template
         working-directory: /tmp/template-test
         run: |
-          nix flake init -t ${{ github.workspace }}#default
+          nix flake init -t ${{ github.workspace }}#example
           sed -i 's|nix-forge.url = "github:imincik/nix-forge";|nix-forge.url = "path:${{ github.workspace }}";|g' flake.nix
           git add *
 
@@ -46,15 +46,18 @@ jobs:
           nix flake metadata
           nix flake show
 
-      - name: Build hello package
+      - name: Build hello-nix package
         working-directory: /tmp/template-test
         run: |
-          nix build .#hello --accept-flake-config
+          nix build .#hello-nix --accept-flake-config
+          nix build .#hello-nix.image --accept-flake-config
 
       - name: Build hello-app
         working-directory: /tmp/template-test
         run: |
           nix build .#hello-app --accept-flake-config
+          nix build .#hello-app.containers --accept-flake-config
+          nix build .#hello-app.vm --accept-flake-config
 
       # FIXME: avoid building with disabled sandbox
       - name: Build _forge-ui

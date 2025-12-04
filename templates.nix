@@ -1,8 +1,8 @@
 {
   flake.templates = {
-    default = {
-      path = ./templates/default;
-      description = "Downstream Nix Forge template";
+    example = {
+      path = ./templates/example;
+      description = "Nix Forge template with example packages";
     };
   };
 }

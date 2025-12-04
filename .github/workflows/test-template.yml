@@ -1,0 +1,65 @@
+name: Test template
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+
+jobs:
+  test-template:
+    name: Test flake template
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v20
+
+      - uses: cachix/cachix-action@v16
+        with:
+          name: flake-forge
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Create test directory
+        run: |
+          mkdir -p /tmp/template-test
+
+      - name: Initialize git repository
+        working-directory: /tmp/template-test
+        run: |
+          git init
+
+      - name: Initialize project from template
+        working-directory: /tmp/template-test
+        run: |
+          nix flake init -t ${{ github.workspace }}#default
+          sed -i 's|nix-forge.url = "github:imincik/nix-forge";|nix-forge.url = "path:${{ github.workspace }}";|g' flake.nix
+          git add *
+
+      - name: Show flake info
+        working-directory: /tmp/template-test
+        run: |
+          nix flake metadata
+          nix flake show
+
+      - name: Build hello package
+        working-directory: /tmp/template-test
+        run: |
+          nix build .#hello --accept-flake-config
+
+      - name: Build hello-app
+        working-directory: /tmp/template-test
+        run: |
+          nix build .#hello-app --accept-flake-config
+
+      # FIXME: avoid building with disabled sandbox
+      - name: Build _forge-ui
+        working-directory: /tmp/template-test
+        run: |
+          nix build .#_forge-ui --accept-flake-config --option sandbox relaxed
+          test -f result/index.html
+          test -f result/forge-config.json

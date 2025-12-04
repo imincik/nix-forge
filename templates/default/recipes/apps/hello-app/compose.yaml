@@ -1,0 +1,16 @@
+services:
+  hello-english:
+    image: localhost/hello-english:latest
+    profiles:
+      - services
+
+  hello-italian:
+    image: localhost/hello-italian:latest
+    profiles:
+      - services
+
+  hello-spanish:
+    image: localhost/hello-spanish:latest
+    profiles:
+      - programs
+      - services

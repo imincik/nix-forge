@@ -42,16 +42,21 @@
       ];
 
       imports = [
+        ./forge/modules/forge.nix
         ./forge/modules/apps.nix
         ./forge/modules/packages.nix
         ./forge/packages.nix
         ./ui/develop.nix
         ./checks.nix
+        ./templates.nix
 
         ./outputs/all-apps.nix
         ./outputs/all-packages.nix
       ];
 
       _module.args.rootPath = ./.;
+
+      # Export flake module for use in other projects
+      flake.flakeModules.default = import ./forge/flake-module.nix { inherit inputs; };
     };
 }

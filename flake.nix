@@ -57,8 +57,8 @@
         forge = {
           repositoryUrl = "github:imincik/nix-forge";
           recipeDirs = {
-            packages = ./outputs/packages;
-            apps = ./outputs/apps;
+            packages = "outputs/packages";
+            apps = "outputs/apps";
           };
         };
       };

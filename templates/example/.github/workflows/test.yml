@@ -1,0 +1,35 @@
+name: Test
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # - name: Get more storage space
+      #   uses: wimpysworld/nothing-but-nix@main
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v20
+
+      - uses: cachix/cachix-action@v16
+        with:
+          name: flake-forge
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Run checks
+        run: nix flake check --accept-flake-config
+
+      # FIXME: avoid building with disabled sandbox
+      - name: Check UI build
+        run: nix build .#_forge-ui --accept-flake-config --option sandbox relaxed

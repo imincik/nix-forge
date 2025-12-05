@@ -285,6 +285,28 @@
     "readOnly": false,
     "type": "attribute set of anything"
   },
+  "apps.*.vm.diskSize": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "4096"
+    },
+    "description": "VM disk size in MB.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "10240"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "apps",
+      "*",
+      "vm",
+      "diskSize"
+    ],
+    "readOnly": false,
+    "type": "signed integer"
+  },
   "apps.*.vm.enable": {
     "declarations": [],
     "default": {
@@ -306,6 +328,28 @@
     ],
     "readOnly": false,
     "type": "boolean"
+  },
+  "apps.*.vm.memorySize": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "2048"
+    },
+    "description": "VM memory size in MB.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "4096"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "apps",
+      "*",
+      "vm",
+      "memorySize"
+    ],
+    "readOnly": false,
+    "type": "signed integer"
   },
   "apps.*.vm.name": {
     "declarations": [],

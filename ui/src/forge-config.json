@@ -2,6 +2,72 @@
   "apps": [
     {
       "containers": {
+        "composeFile": "/nix/store/dq7xw4yyiqwq7kksy86k89zm24i8rc4z-compose.yaml",
+        "images": [
+          {
+            "config": {
+              "CMD": [
+                "forge-registry"
+              ]
+            },
+            "name": "forge-registry",
+            "requirements": [
+              "/nix/store/kr03c6kzc76400jm4i243wkmzbl45ywr-forge-registry-0.1.0"
+            ]
+          }
+        ]
+      },
+      "description": "OCI-compliant container registry for Nix Forge.",
+      "name": "forge-registry-app",
+      "programs": {
+        "requirements": [
+          "/nix/store/kr03c6kzc76400jm4i243wkmzbl45ywr-forge-registry-0.1.0"
+        ]
+      },
+      "usage": "",
+      "version": "0.1.0",
+      "vm": {
+        "config": {
+          "ports": [
+            "6443:6443"
+          ],
+          "system": {
+            "systemd": {
+              "services": {
+                "forge-registry": {
+                  "after": [
+                    "network.target"
+                  ],
+                  "description": "Nix Forge Container Registry",
+                  "environment": {
+                    "FLASK_HOST": "0.0.0.0",
+                    "FLASK_PORT": "6443",
+                    "GITHUB_REPO": "github:imincik/nix-forge",
+                    "LOG_LEVEL": "INFO"
+                  },
+                  "serviceConfig": {
+                    "ExecStart": "/nix/store/kr03c6kzc76400jm4i243wkmzbl45ywr-forge-registry-0.1.0/bin/forge-registry",
+                    "Restart": "on-failure",
+                    "RestartSec": "5s",
+                    "Type": "simple"
+                  },
+                  "wantedBy": [
+                    "multi-user.target"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "enable": true,
+        "name": "forge-registry",
+        "requirements": [
+          "/nix/store/kr03c6kzc76400jm4i243wkmzbl45ywr-forge-registry-0.1.0"
+        ]
+      }
+    },
+    {
+      "containers": {
         "composeFile": "/nix/store/nw6szwqhv08zh1891y1a6pc0gbk6mwvc-compose.yaml",
         "images": [
           {
@@ -146,6 +212,60 @@
     ]
   },
   "packages": [
+    {
+      "build": {
+        "debug": false,
+        "extraDrvAttrs": {},
+        "plainBuilder": {
+          "build": "echo 'Build phase'",
+          "check": "echo 'Check phase'",
+          "configure": "echo 'Configure phase'",
+          "enable": false,
+          "install": "echo 'Install phase'",
+          "requirements": {
+            "build": [],
+            "native": []
+          }
+        },
+        "pythonAppBuilder": {
+          "enable": true,
+          "requirements": {
+            "build-system": [
+              "/nix/store/ybb7fxf4gx0y3yqynh39sr6qhkzp832i-python3.13-setuptools-80.9.0",
+              "/nix/store/w54x75brfndymjy9v4845nsfagbnbjny-python3.13-wheel-0.46.1"
+            ],
+            "dependencies": [
+              "/nix/store/jsmqjsbglcp4gzl4aqi085a2x8ljb5r6-python3.13-flask-3.1.2"
+            ]
+          }
+        },
+        "standardBuilder": {
+          "enable": false,
+          "requirements": {
+            "build": [],
+            "native": []
+          }
+        }
+      },
+      "description": "OCI-compliant container registry for Nix Forge.",
+      "development": {
+        "requirements": [],
+        "shellHook": "echo -e \"\\nWelcome. This environment contains all dependencies required\"\necho \"to build this software from source.\"\necho\necho \"Now, navigate to the source code directory and you are all set to\"\necho \"start hacking.\"\n"
+      },
+      "homePage": "https://github.com/imincik/nix-forge-registry",
+      "mainProgram": "forge-registry",
+      "name": "forge-registry",
+      "source": {
+        "git": "github:imincik/nix-forge-registry/master",
+        "hash": "sha256-rlo3TVXAbck686L1UT5kJzhsmFqub1B8RRMUjgF6pTc=",
+        "url": null
+      },
+      "test": {
+        "requirements": [],
+        "script": "python -c \"import app; print('app module imported successfully')\"\npython -c \"import registry; print('registry module imported successfully')\"\n"
+      },
+      "version": "0.1.0"
+    },
     {
       "build": {
         "debug": false,

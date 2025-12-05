@@ -811,6 +811,28 @@
     "readOnly": false,
     "type": "string"
   },
+  "packages.*.source.path": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "null"
+    },
+    "description": "This option has no description.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "./backend/src"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "packages",
+      "*",
+      "source",
+      "path"
+    ],
+    "readOnly": false,
+    "type": "null or absolute path"
+  },
   "packages.*.source.url": {
     "declarations": [],
     "default": {

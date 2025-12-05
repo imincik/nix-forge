@@ -56,6 +56,8 @@
       "version": "1.0.0",
       "vm": {
         "config": {
+          "diskSize": 4096,
+          "memorySize": 2048,
           "ports": [],
           "system": {}
         },
@@ -94,6 +96,8 @@
       "version": "1.0.0",
       "vm": {
         "config": {
+          "diskSize": 4096,
+          "memorySize": 2048,
           "ports": [
             "5000:5000"
           ],
@@ -142,7 +146,9 @@
       "apps.*.vm.name",
       "apps.*.vm.requirements",
       "apps.*.vm.config.system",
-      "apps.*.vm.config.ports"
+      "apps.*.vm.config.ports",
+      "apps.*.vm.config.memorySize",
+      "apps.*.vm.config.diskSize"
     ]
   },
   "packages": [
@@ -183,7 +189,7 @@
       "description": "GDAL package built from GitHub source.",
       "development": {
         "requirements": [],
-        "shellHook": "echo -e \"\\nWelcome. This environment contains all dependencies required\"\necho \"to build this software from source.\"\necho\necho \"Now, navigate to the source code directory and you are all set to\"\necho \"start hacking.\"\n"
+        "shellHook": "echo -e \"\\nWelcome. This environment contains all dependencies required\"\necho \"to build $DEVENV_PACKAGE_NAME from source.\"\necho\necho \"Grab the source code from $DEVENV_PACKAGE_SOURCE\"\necho \"or from the upstream repository and you are all set to start hacking.\"\n"
       },
       "homePage": "https://gdal.org",
       "mainProgram": "gdalinfo",
@@ -191,6 +197,7 @@
       "source": {
         "git": "github:OSGeo/gdal/3679e5e4511ae8b4a956ded7ef7be23fdb86b7db",
         "hash": "sha256-0cHD1+vEAahllGNOe6Y4uec44HmCvlJphRj8JPJzOXc=",
+        "path": null,
         "url": null
       },
       "test": {
@@ -235,7 +242,7 @@
       "description": "GEOS package built from GitHub source.",
       "development": {
         "requirements": [],
-        "shellHook": "echo -e \"\\nWelcome. This environment contains all dependencies required\"\necho \"to build this software from source.\"\necho\necho \"Now, navigate to the source code directory and you are all set to\"\necho \"start hacking.\"\n"
+        "shellHook": "echo -e \"\\nWelcome. This environment contains all dependencies required\"\necho \"to build $DEVENV_PACKAGE_NAME from source.\"\necho\necho \"Grab the source code from $DEVENV_PACKAGE_SOURCE\"\necho \"or from the upstream repository and you are all set to start hacking.\"\n"
       },
       "homePage": "https://libgeos.org",
       "mainProgram": "geosop",
@@ -243,6 +250,7 @@
       "source": {
         "git": "github:libgeos/geos/883f237d1ecbf49f8efd09905df05814783c5b50",
         "hash": "sha256-enHSmHW8bgRIv33cQrlllF6rbrCkXfqQilcu53LQiRE=",
+        "path": null,
         "url": null
       },
       "test": {
@@ -284,7 +292,7 @@
       "description": "Hello package built from source code tarball.",
       "development": {
         "requirements": [],
-        "shellHook": "echo -e \"\\nWelcome. This environment contains all dependencies required\"\necho \"to build this software from source.\"\necho\necho \"Now, navigate to the source code directory and you are all set to\"\necho \"start hacking.\"\n"
+        "shellHook": "echo -e \"\\nWelcome. This environment contains all dependencies required\"\necho \"to build $DEVENV_PACKAGE_NAME from source.\"\necho\necho \"Grab the source code from $DEVENV_PACKAGE_SOURCE\"\necho \"or from the upstream repository and you are all set to start hacking.\"\n"
       },
       "homePage": "https://www.gnu.org/software/hello",
       "mainProgram": "hello",
@@ -292,6 +300,7 @@
       "source": {
         "git": null,
         "hash": "sha256-jZkUKv2SV28wsM18tCqNxoCZmLxdYH2Idh9RLibH2yA=",
+        "path": null,
         "url": "mirror://gnu/hello/hello-2.12.1.tar.gz"
       },
       "test": {
@@ -338,7 +347,7 @@
       "description": "Python web application example built from GitHub source.",
       "development": {
         "requirements": [],
-        "shellHook": "echo -e \"\\nWelcome. This environment contains all dependencies required\"\necho \"to build this software from source.\"\necho\necho \"Now, navigate to the source code directory and you are all set to\"\necho \"start hacking.\"\n"
+        "shellHook": "echo -e \"\\nWelcome. This environment contains all dependencies required\"\necho \"to build $DEVENV_PACKAGE_NAME from source.\"\necho\necho \"Grab the source code from $DEVENV_PACKAGE_SOURCE\"\necho \"or from the upstream repository and you are all set to start hacking.\"\n"
       },
       "homePage": "https://github.com/imincik/python-web-example",
       "mainProgram": "python-web",
@@ -346,6 +355,7 @@
       "source": {
         "git": "github:imincik/python-web-example/bd57b302e930f3b8b80448d2c08a3aac7d48e4ec",
         "hash": "sha256-nSW5746+criXHPrxmJ+0zhJCMwl78eer03qQAvDIo5U=",
+        "path": null,
         "url": null
       },
       "test": {
@@ -387,5 +397,10 @@
       "packages.*.build.standardBuilder.requirements.build",
       "packages.*.test.script"
     ]
-  }
+  },
+  "recipeDirs": {
+    "apps": "recipes/apps",
+    "packages": "recipes/packages"
+  },
+  "repositoryUrl": "github:imincik/nix-forge"
 }

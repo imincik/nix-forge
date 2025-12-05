@@ -28,6 +28,8 @@ type alias Model =
     { options : List Option
     , packagesFilter : OptionsFilter
     , appsFilter : OptionsFilter
+    , recipeDirPackages : String
+    , recipeDirApps : String
     , selectedOption : Maybe Option
     , searchString : String
     , category : String
@@ -45,6 +47,8 @@ init _ url key =
     ( { options = []
       , packagesFilter = Dict.empty
       , appsFilter = Dict.empty
+      , recipeDirPackages = ""
+      , recipeDirApps = ""
       , selectedOption = Nothing
       , searchString = ""
       , category = "packages"
@@ -95,7 +99,14 @@ update msg model =
             ( { model | error = Just (httpErrorToString err) }, Cmd.none )
 
         GetConfig (Ok config) ->
-            ( { model | packagesFilter = config.packagesFilter, appsFilter = config.appsFilter }, Cmd.none )
+            ( { model
+                | packagesFilter = config.packagesFilter
+                , appsFilter = config.appsFilter
+                , recipeDirPackages = config.recipeDirs.packages
+                , recipeDirApps = config.recipeDirs.apps
+              }
+            , Cmd.none
+            )
 
         GetConfig (Err err) ->
             ( { model | error = Just (httpErrorToString err) }, Cmd.none )
@@ -255,7 +266,7 @@ view model =
             -- option details or instructions panel
             , div [ class "col-lg-6 bg-dark text-white py-3 my-3" ]
                 [ if model.showInstructions then
-                    instructionsHtml model.category model.options
+                    instructionsHtml model.category model.recipeDirPackages model.recipeDirApps model.options
 
                   else
                     case model.selectedOption of
@@ -323,8 +334,8 @@ initialInstructionsHtml =
         ]
 
 
-instructionsHtml : String -> List Option -> Html Msg
-instructionsHtml category options =
+instructionsHtml : String -> String -> String -> List Option -> Html Msg
+instructionsHtml category recipeDirPackages recipeDirApps options =
     case category of
         "packages" ->
             let
@@ -335,16 +346,16 @@ instructionsHtml category options =
                 [ h5 [] [ text "NEW PACKAGE" ]
                 , hr [] []
                 , p [] [ text "1. Create a new package directory" ]
-                , codeBlock (newDirectoryCmd ("outputs/packages/" ++ newPackageName options))
+                , codeBlock (newDirectoryCmd (recipeDirPackages ++ "/" ++ newPackageName options))
                 , p [] [ text "2. Create a recipe file and add it to git" ]
-                , codeBlock (newRecipeFile ("outputs/packages/" ++ newPackageName options ++ "/recipe.nix") recipeContent)
-                , codeBlock (addFileToGitCmd ("outputs/packages/" ++ newPackageName options ++ "/recipe.nix"))
+                , codeBlock (newRecipeFile (recipeDirPackages ++ "/" ++ newPackageName options ++ "/recipe.nix") recipeContent)
+                , codeBlock (addFileToGitCmd (recipeDirPackages ++ "/" ++ newPackageName options ++ "/recipe.nix"))
                 , p [] [ text "3. Test build" ]
                 , codeBlock (buildPackageCmd (newPackageName options))
                 , p [] [ text "4. Run test" ]
                 , codeBlock (runPackageTestCmd (newPackageName options))
                 , p [] [ text "5. Submit PR" ]
-                , codeBlock (addFileToGitCmd ("outputs/packages/" ++ newPackageName options ++ "/recipe.nix"))
+                , codeBlock (addFileToGitCmd (recipeDirPackages ++ "/" ++ newPackageName options ++ "/recipe.nix"))
                 , codeBlock (submitPRCmd (newPackageName options))
                 ]
 
@@ -357,14 +368,14 @@ instructionsHtml category options =
                 [ h5 [] [ text "NEW APPLICATION" ]
                 , hr [] []
                 , p [] [ text "1. Create a new application directory" ]
-                , codeBlock (newDirectoryCmd ("outputs/apps/" ++ newAppName options))
+                , codeBlock (newDirectoryCmd (recipeDirApps ++ "/" ++ newAppName options))
                 , p [] [ text "2. Create a recipe file and add it to git" ]
-                , codeBlock (newRecipeFile ("outputs/apps/" ++ newAppName options ++ "/recipe.nix") recipeContent)
-                , codeBlock (addFileToGitCmd ("outputs/apps/" ++ newAppName options ++ "/recipe.nix"))
+                , codeBlock (newRecipeFile (recipeDirApps ++ "/" ++ newAppName options ++ "/recipe.nix") recipeContent)
+                , codeBlock (addFileToGitCmd (recipeDirApps ++ "/" ++ newAppName options ++ "/recipe.nix"))
                 , p [] [ text "3. Test build" ]
                 , codeBlock (buildAppCmd (newAppName options))
                 , p [] [ text "4. Submit PR" ]
-                , codeBlock (addFileToGitCmd ("outputs/apps/" ++ newAppName options ++ "/recipe.nix"))
+                , codeBlock (addFileToGitCmd (recipeDirApps ++ "/" ++ newAppName options ++ "/recipe.nix"))
                 , codeBlock (submitPRCmd (newAppName options))
                 ]
 

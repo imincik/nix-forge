@@ -17,8 +17,8 @@ This specification guides LLMs in generating Nix Forge recipes - declarative con
 ## Recipe File Structure
 
 ### Location
-- **Packages**: `outputs/packages/<package-name>/recipe.nix`
-- **Apps**: `outputs/apps/<app-name>/recipe.nix`
+- **Packages**: `recipes/packages/<package-name>/recipe.nix`
+- **Apps**: `recipes/apps/<app-name>/recipe.nix`
 
 ### Basic Template
 ```nix
@@ -57,9 +57,9 @@ This follows the same pattern as accessing nixpkgs packages (e.g., `pkgs.sqlite`
 
 After creating a new recipe file, you must run:
 ```bash
-git add outputs/packages/<package-name>/recipe.nix
+git add recipes/packages/<package-name>/recipe.nix
 # or for apps:
-git add outputs/apps/<app-name>/recipe.nix
+git add recipes/apps/<app-name>/recipe.nix
 ```
 
 The flake uses `import-tree` to automatically discover recipes, but it only sees files tracked by git. Without adding the file to git, the package will not be recognized and `nix build .#<package-name>` will fail with an error like:
@@ -897,7 +897,7 @@ When asked to create a Nix Forge recipe from a git repository, follow this workf
 
 ### Phase 2: Create Initial Recipe
 
-1. Create package directory: `mkdir -p outputs/packages/<name>`
+1. Create package directory: `mkdir -p recipes/packages/<name>`
 2. Write `recipe.nix` with:
    - Basic metadata (name, version, description, homePage, mainProgram)
    - Appropriate builder (pythonAppBuilder or standardBuilder)
@@ -908,7 +908,7 @@ When asked to create a Nix Forge recipe from a git repository, follow this workf
 ### Phase 3: Add to Git (CRITICAL!)
 
 ```bash
-git add outputs/packages/<name>/recipe.nix
+git add recipes/packages/<name>/recipe.nix
 ```
 
 **Without this step, the package will not be recognized by the flake!**

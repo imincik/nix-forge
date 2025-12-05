@@ -1,0 +1,6 @@
+services:
+  hello:
+    image: localhost/hello:latest
+    profiles:
+      - programs
+      - services

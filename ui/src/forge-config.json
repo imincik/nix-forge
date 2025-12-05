@@ -399,8 +399,8 @@
     ]
   },
   "recipeDirs": {
-    "apps": "outputs/apps",
-    "packages": "outputs/packages"
+    "apps": "recipes/apps",
+    "packages": "recipes/packages"
   },
   "repositoryUrl": "github:imincik/nix-forge"
 }

@@ -37,7 +37,7 @@ superpowers of Nix.
 ## Packaging workflow
 
 1. Create a new package recipe file in
-   `outputs/packages/<package>/recipe.nix` and add it to git.
+   `recipes/packages/<package>/recipe.nix` and add it to git.
 
 1. Build package
 
@@ -53,9 +53,9 @@ nix build .#<package> -L
 
 ### Examples
 
-* [Package recipe examples](outputs/packages)
+* [Package recipe examples](recipes/packages)
 
-* [Application recipe examples](outputs/apps)
+* [Application recipe examples](recipes/apps)
 
 ### Debugging
 

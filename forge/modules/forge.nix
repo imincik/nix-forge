@@ -25,8 +25,8 @@ in
 
           recipeDirs = {
             packages = lib.mkOption {
-              type = lib.types.nullOr lib.types.path;
-              default = ./outputs/packages;
+              type = lib.types.nullOr lib.types.str;
+              default = "outputs/packages";
               description = ''
                 Directory containing package recipe files.
                 Each recipe should be a recipe.nix file in a subdirectory
@@ -34,12 +34,12 @@ in
 
                 Set to null to disable automatic package recipe loading.
               '';
-              example = lib.literalExpression "./outputs/packages";
+              example = "outputs/packages";
             };
 
             apps = lib.mkOption {
-              type = lib.types.nullOr lib.types.path;
-              default = ./outputs/apps;
+              type = lib.types.nullOr lib.types.str;
+              default = "outputs/apps";
               description = ''
                 Directory containing app recipe files.
                 Each recipe should be a recipe.nix file in a subdirectory
@@ -47,7 +47,7 @@ in
 
                 Set to null to disable automatic app recipe loading.
               '';
-              example = lib.literalExpression "./outputs/apps";
+              example = "outputs/apps";
             };
           };
         };

@@ -8,8 +8,15 @@ type alias OptionsFilter =
     Dict.Dict String (List String)
 
 
+type alias RecipeDirs =
+    { packages : String
+    , apps : String
+    }
+
+
 type alias Config =
     { repositoryUrl : String
+    , recipeDirs : RecipeDirs
     , apps : List App
     , packages : List Package
     , packagesFilter : OptionsFilter
@@ -46,10 +53,18 @@ optionsFilterDecoder =
     Decode.dict (Decode.list Decode.string)
 
 
+recipeDirsDecoder : Decode.Decoder RecipeDirs
+recipeDirsDecoder =
+    Decode.map2 RecipeDirs
+        (Decode.field "packages" Decode.string)
+        (Decode.field "apps" Decode.string)
+
+
 configDecoder : Decode.Decoder Config
 configDecoder =
-    Decode.map5 Config
+    Decode.map6 Config
         (Decode.field "repositoryUrl" Decode.string)
+        (Decode.field "recipeDirs" recipeDirsDecoder)
         (Decode.field "apps" (Decode.list appDecoder))
         (Decode.field "packages" (Decode.list packageDecoder))
         (Decode.field "packagesFilter" optionsFilterDecoder)

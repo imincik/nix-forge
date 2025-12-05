@@ -24,6 +24,8 @@ port copyToClipboard : String -> Cmd msg
 
 type alias Model =
     { repositoryUrl : String
+    , recipeDirPackages : String
+    , recipeDirApps : String
     , apps : List App
     , packages : List Package
     , selectedOutput : String
@@ -60,6 +62,8 @@ emptyPackage =
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init _ url key =
     ( { repositoryUrl = "github:imincik/nix-forge"
+      , recipeDirPackages = ""
+      , recipeDirApps = ""
       , apps = []
       , packages = []
       , selectedOutput = "packages"
@@ -95,7 +99,14 @@ update msg model =
         GetConfig (Ok config) ->
             let
                 updatedModel =
-                    { model | repositoryUrl = config.repositoryUrl, apps = config.apps, packages = config.packages, error = Nothing }
+                    { model
+                        | repositoryUrl = config.repositoryUrl
+                        , recipeDirPackages = config.recipeDirs.packages
+                        , recipeDirApps = config.recipeDirs.apps
+                        , apps = config.apps
+                        , packages = config.packages
+                        , error = Nothing
+                    }
             in
             ( selectFromUrl updatedModel, Cmd.none )
 
@@ -227,11 +238,11 @@ view model =
                   else if model.selectedOutput == "packages" then
                     -- usage instructions
                     div []
-                        (packageInstructionsHtml model.repositoryUrl CopyCode model.selectedPackage)
+                        (packageInstructionsHtml model.repositoryUrl model.recipeDirPackages CopyCode model.selectedPackage)
 
                   else
                     div []
-                        (appInstructionsHtml model.repositoryUrl CopyCode model.selectedApp)
+                        (appInstructionsHtml model.repositoryUrl model.recipeDirApps CopyCode model.selectedApp)
                 ]
             ]
 

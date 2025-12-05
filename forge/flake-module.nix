@@ -1,6 +1,6 @@
 { inputs }: # nix-forge's inputs (import-tree, nix-utils)
 
-{ lib, ... }:
+{ lib, self, ... }:
 
 {
   # Import the core forge modules
@@ -33,8 +33,12 @@
             [ ]
           else
             let
+              # Convert string path to actual path relative to flake root
+              # self.outPath gives us the flake root directory
+              dirPath = self.outPath + "/${dir}";
+
               # Use bundled import-tree from nix-forge inputs
-              recipeFiles = (inputs.import-tree.withLib lib).leafs dir;
+              recipeFiles = (inputs.import-tree.withLib lib).leafs dirPath;
 
               # Extend pkgs with mypkgs containing all Nix Forge packages
               # This allows recipes to reference other packages via mypkgs

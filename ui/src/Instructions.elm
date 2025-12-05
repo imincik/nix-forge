@@ -141,8 +141,8 @@ enterPackageDevenvCmd repositoryUrl pkg =
 """ [ repositoryUrl, pkg.name ]
 
 
-packageInstructionsHtml : String -> (String -> msg) -> Package -> List (Html msg)
-packageInstructionsHtml repositoryUrl onCopy pkg =
+packageInstructionsHtml : String -> String -> (String -> msg) -> Package -> List (Html msg)
+packageInstructionsHtml repositoryUrl recipeDirPackages onCopy pkg =
     if not (String.isEmpty pkg.name) then
         [ h2 [] [ text pkg.name ]
         , hr [] []
@@ -174,10 +174,10 @@ packageInstructionsHtml repositoryUrl onCopy pkg =
         , br [] []
         , text "Recipe : "
         , a
-            [ href (repositoryToGithubUrl repositoryUrl ++ "/blob/master/outputs/packages/" ++ pkg.name ++ "/recipe.nix")
+            [ href (repositoryToGithubUrl repositoryUrl ++ "/blob/master/" ++ recipeDirPackages ++ "/" ++ pkg.name ++ "/recipe.nix")
             , target "_blank"
             ]
-            [ text ("packages/" ++ pkg.name ++ "/recipe.nix") ]
+            [ text (recipeDirPackages ++ "/" ++ pkg.name ++ "/recipe.nix") ]
         ]
 
     else
@@ -209,8 +209,8 @@ runAppVmCmd repositoryUrl app =
 """ [ repositoryUrl, app.name ]
 
 
-appInstructionsHtml : String -> (String -> msg) -> App -> List (Html msg)
-appInstructionsHtml repositoryUrl onCopy app =
+appInstructionsHtml : String -> String -> (String -> msg) -> App -> List (Html msg)
+appInstructionsHtml repositoryUrl recipeDirApps onCopy app =
     if not (String.isEmpty app.name) then
         [ h2 [] [ text app.name ]
         , hr [] []
@@ -244,10 +244,10 @@ appInstructionsHtml repositoryUrl onCopy app =
         , hr [] []
         , text "Recipe: "
         , a
-            [ href (repositoryToGithubUrl repositoryUrl ++ "/blob/master/outputs/apps/" ++ app.name ++ "/recipe.nix")
+            [ href (repositoryToGithubUrl repositoryUrl ++ "/blob/master/" ++ recipeDirApps ++ "/" ++ app.name ++ "/recipe.nix")
             , target "_blank"
             ]
-            [ text ("apps/" ++ app.name ++ "/recipe.nix") ]
+            [ text (recipeDirApps ++ "/" ++ app.name ++ "/recipe.nix") ]
         , a
             [ href "options.html"
             , target "_blank"

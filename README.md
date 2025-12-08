@@ -3,14 +3,14 @@
 **WARNING: this sofware is currently in alpha state of development.**
 
 Nix Forge is an attempt to lower the barrier and learning curve required for
-packaging and deploying software with Nix to a level acceptable for newcomers
-who expect to adopt a new technology over the weekend while preserving all the
+packaging and deploying software with Nix, enforce best practices and unlock the
 superpowers of Nix.
 
 ## Features
 
 * Simple, type checked configuration recipes for **packages** and
-  **mutli-component applications**
+  **mutli-component applications** using
+  [module system](https://nix.dev/tutorials/module-system/index.html)
 
 * [Web UI](https://imincik.github.io/nix-forge)
 

@@ -10,12 +10,16 @@ let
   inherit (flake-parts-lib) mkPerSystemOption;
 in
 {
+  imports = [
+    ./builders/shared.nix
+    ./builders/plain-builder.nix
+    ./builders/standard-builder.nix
+    ./builders/python-app-builder.nix
+  ];
+
   options = {
     perSystem = mkPerSystemOption (
       { config, pkgs, ... }:
-      let
-        cfg = config.forge.packages;
-      in
       {
         options = {
           forge = {
@@ -112,71 +116,9 @@ in
 
                     # Build configuration
                     build = {
-                      plainBuilder = {
-                        enable = lib.mkEnableOption ''
-                          Plain builder.
-                        '';
-                        requirements = {
-                          native = lib.mkOption {
-                            type = lib.types.listOf lib.types.package;
-                            default = [ ];
-                          };
-                          build = lib.mkOption {
-                            type = lib.types.listOf lib.types.package;
-                            default = [ ];
-                          };
-                        };
-                        configure = lib.mkOption {
-                          type = lib.types.str;
-                          default = "echo 'Configure phase'";
-                        };
-                        build = lib.mkOption {
-                          type = lib.types.str;
-                          default = "echo 'Build phase'";
-                        };
-                        check = lib.mkOption {
-                          type = lib.types.str;
-                          default = "echo 'Check phase'";
-                        };
-                        install = lib.mkOption {
-                          type = lib.types.str;
-                          default = "echo 'Install phase'";
-                        };
-                      };
+                      # Builder-specific options are defined in forge/modules/builders directory
 
-                      standardBuilder = {
-                        enable = lib.mkEnableOption ''
-                          Standard builder.
-                        '';
-                        requirements = {
-                          native = lib.mkOption {
-                            type = lib.types.listOf lib.types.package;
-                            default = [ ];
-                          };
-                          build = lib.mkOption {
-                            type = lib.types.listOf lib.types.package;
-                            default = [ ];
-                          };
-                        };
-                      };
-
-                      pythonAppBuilder = {
-                        enable = lib.mkEnableOption ''
-                          Python application builder.
-                        '';
-                        requirements = {
-                          build-system = lib.mkOption {
-                            type = lib.types.listOf lib.types.package;
-                            default = [ ];
-                          };
-                          dependencies = lib.mkOption {
-                            type = lib.types.listOf lib.types.package;
-                            default = [ ];
-                          };
-                        };
-                      };
-
-                      # Other common builder options
+                      # Common builder options
                       extraDrvAttrs = lib.mkOption {
                         type = lib.types.attrsOf lib.types.anything;
                         default = { };
@@ -247,163 +189,8 @@ in
           };
         };
 
-        config = {
-          packages =
-            let
-              pkgSource =
-                let
-                  gitForges = {
-                    # forge = fetchFunction
-                    github = pkgs.fetchFromGitHub;
-                    gitlab = pkgs.fetchFromGitLab;
-                  };
-                in
-                pkg:
-                assert
-                  (pkg.source.git == null && pkg.source.url == null && pkg.source.path == null)
-                  -> throw "'source.git', 'source.url' or 'source.path' must be defined for ${pkg.name}";
-                # 1. Use path if provided
-                if pkg.source.path != null then
-                  pkg.source.path
-                # 2. Use git
-                else if pkg.source.git != null then
-                  let
-                    gitForge = lib.elemAt (lib.splitString ":" pkg.source.git) 0;
-                    gitParams = lib.splitString "/" pkg.source.git;
-                  in
-                  gitForges.${gitForge} {
-                    owner = lib.removePrefix "${gitForge}:" (lib.lists.elemAt gitParams 0);
-                    repo = lib.lists.elemAt gitParams 1;
-                    rev = lib.lists.elemAt gitParams 2;
-                    hash = pkg.source.hash;
-                  }
-                # 3. Fallback to tarball dowload
-                else
-                  pkgs.fetchurl {
-                    url = pkg.source.url;
-                    hash = pkg.source.hash;
-                  };
-
-              pkgPassthru = pkg: finalPkg: {
-                test = pkgs.testers.runCommand {
-                  name = "${pkg.name}-test";
-                  buildInputs = [ finalPkg ] ++ pkg.test.requirements;
-                  script = pkg.test.script + "\ntouch $out";
-                };
-                image = pkgs.dockerTools.buildImage {
-                  name = "${pkg.name}";
-                  tag = pkg.version;
-                  copyToRoot = [
-                    finalPkg
-                  ];
-                  config = {
-                    Entrypoint = [ "${pkgs.bashInteractive}/bin/bash" ];
-                  };
-                };
-                devenv = pkgs.mkShell {
-                  env.DEVENV_PACKAGE_NAME = "${pkg.name}";
-                  env.DEVENV_PACKAGE_SOURCE = "${finalPkg.src}";
-                  inputsFrom = [
-                    finalPkg
-                  ];
-                  packages = pkg.development.requirements;
-                  shellHook = pkg.development.shellHook;
-                };
-              };
-
-              pkgMeta = pkg: {
-                description = pkg.description;
-                mainProgram = pkg.mainProgram;
-              };
-
-              debugShellHookAttr = {
-                shellHook = "source ${inputs.nix-utils}/nix-develop-interactive.bash";
-              };
-
-              plainBuilderPkgs = lib.listToAttrs (
-                map (pkg: {
-                  name = pkg.name;
-                  value = pkgs.callPackage (
-                    # Derivation start
-                    { stdenv }:
-                    stdenv.mkDerivation (
-                      finalAttrs:
-                      {
-                        pname = pkg.name;
-                        version = pkg.version;
-                        src = pkgSource pkg;
-                        nativeBuildInputs = pkg.build.plainBuilder.requirements.native;
-                        buildInputs = pkg.build.plainBuilder.requirements.build;
-                        configurePhase = pkg.build.plainBuilder.configure;
-                        buildPhase = pkg.build.plainBuilder.build;
-                        installPhase = pkg.build.plainBuilder.install;
-                        checkPhase = pkg.build.plainBuilder.check;
-                        doCheck = true;
-                        doInstallCheck = true;
-                        passthru = pkgPassthru pkg finalAttrs.finalPackage;
-                        meta = pkgMeta pkg;
-                      }
-                      // lib.optionalAttrs pkg.build.debug debugShellHookAttr
-                    )
-                    # Derivation end
-                  ) { };
-                }) (lib.filter (p: p.build.plainBuilder.enable == true) cfg)
-              );
-
-              standardBuilderPkgs = lib.listToAttrs (
-                map (pkg: {
-                  name = pkg.name;
-                  value = pkgs.callPackage (
-                    # Derivation start
-                    { stdenv }:
-                    stdenv.mkDerivation (
-                      finalAttrs:
-                      {
-                        pname = pkg.name;
-                        version = pkg.version;
-                        src = pkgSource pkg;
-                        nativeBuildInputs = pkg.build.standardBuilder.requirements.native;
-                        buildInputs = pkg.build.standardBuilder.requirements.build;
-                        passthru = pkgPassthru pkg finalAttrs.finalPackage;
-                        meta = pkgMeta pkg;
-                      }
-                      // pkg.build.extraDrvAttrs
-                      // lib.optionalAttrs pkg.build.debug debugShellHookAttr
-                    )
-                    # Derivation end
-                  ) { };
-                }) (lib.filter (p: p.build.standardBuilder.enable == true) cfg)
-              );
-
-              pythonAppBuilderPkgs = lib.listToAttrs (
-                map (pkg: rec {
-                  name = pkg.name;
-                  value = pkgs.callPackage (
-                    # Derivation start
-                    # buildPythonPackage doesn't support finalAttrs function.
-                    # Passing thePackage to derivation is used as workaround.
-                    { stdenv, thePackage }:
-                    pkgs.python3Packages.buildPythonApplication (
-                      {
-                        pname = pkg.name;
-                        version = pkg.version;
-                        format = "pyproject";
-                        src = pkgSource pkg;
-                        build-system = pkg.build.pythonAppBuilder.requirements.build-system;
-                        dependencies = pkg.build.pythonAppBuilder.requirements.dependencies;
-                        passthru = pkgPassthru pkg thePackage;
-                        meta = pkgMeta pkg;
-                      }
-                      // pkg.build.extraDrvAttrs
-                      // lib.optionalAttrs pkg.build.debug debugShellHookAttr
-                    )
-                    # Derivation end
-                  ) { thePackage = value; };
-                }) (lib.filter (p: p.build.pythonAppBuilder.enable == true) cfg)
-              );
-            in
-            (plainBuilderPkgs // standardBuilderPkgs // pythonAppBuilderPkgs);
-        };
+        # Config section is now provided by builder modules
+        config = { };
       }
     );
   };

@@ -99,6 +99,11 @@ in
                         default = null;
                         example = "https://downloads.my-project/my-package-1.0.0.tar.gz";
                       };
+                      path = lib.mkOption {
+                        type = lib.types.nullOr lib.types.path;
+                        default = null;
+                        example = lib.literalExpression "./backend/src";
+                      };
                       hash = lib.mkOption {
                         type = lib.types.str;
                         default = "";
@@ -255,10 +260,13 @@ in
                 in
                 pkg:
                 assert
-                  (pkg.source.git == null && pkg.source.url == null)
-                  -> throw "'source.git' or 'source.url' must be defined for ${pkg.name}";
-                # By default, try to use git
-                if pkg.source.git != null then
+                  (pkg.source.git == null && pkg.source.url == null && pkg.source.path == null)
+                  -> throw "'source.git', 'source.url' or 'source.path' must be defined for ${pkg.name}";
+                # 1. Use path if provided
+                if pkg.source.path != null then
+                  pkg.source.path
+                # 2. Use git
+                else if pkg.source.git != null then
                   let
                     gitForge = lib.elemAt (lib.splitString ":" pkg.source.git) 0;
                     gitParams = lib.splitString "/" pkg.source.git;
@@ -269,7 +277,7 @@ in
                     rev = lib.lists.elemAt gitParams 2;
                     hash = pkg.source.hash;
                   }
-                # Fallback to tarball dowload
+                # 3. Fallback to tarball dowload
                 else
                   pkgs.fetchurl {
                     url = pkg.source.url;

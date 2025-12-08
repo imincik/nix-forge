@@ -17,6 +17,16 @@ import Markdown
 import Utils exposing (format)
 
 
+repositoryToGithubUrl : String -> String
+repositoryToGithubUrl repositoryUrl =
+    if String.startsWith "github:" repositoryUrl then
+        "https://github.com/" ++ String.dropLeft 7 repositoryUrl
+    else if String.startsWith "path:" repositoryUrl then
+        "#"
+    else
+        repositoryUrl
+
+
 codeBlock : (String -> msg) -> String -> Html msg
 codeBlock onCopy content =
     div [ class "position-relative" ]
@@ -110,29 +120,29 @@ installInstructionsHtml onCopy =
     ]
 
 
-runPackageShellCmd : Package -> String
-runPackageShellCmd pkg =
-    format """nix shell github:imincik/nix-forge#{0}
-""" [ pkg.name ]
+runPackageShellCmd : String -> Package -> String
+runPackageShellCmd repositoryUrl pkg =
+    format """nix shell {0}#{1}
+""" [ repositoryUrl, pkg.name ]
 
 
-runPackageContainerCmd : Package -> String
-runPackageContainerCmd pkg =
-    format """nix build github:imincik/nix-forge#{0}.image
+runPackageContainerCmd : String -> Package -> String
+runPackageContainerCmd repositoryUrl pkg =
+    format """nix build {0}#{1}.image
 
 podman load < ./result
-podman run -it --rm localhost/{0}:{1}
-""" [ pkg.name, pkg.version ]
+podman run -it --rm localhost/{1}:{2}
+""" [ repositoryUrl, pkg.name, pkg.version ]
 
 
-enterPackageDevenvCmd : Package -> String
-enterPackageDevenvCmd pkg =
-    format """nix develop github:imincik/nix-forge#{0}.devenv
-""" [ pkg.name ]
+enterPackageDevenvCmd : String -> Package -> String
+enterPackageDevenvCmd repositoryUrl pkg =
+    format """nix develop {0}#{1}.devenv
+""" [ repositoryUrl, pkg.name ]
 
 
-packageInstructionsHtml : (String -> msg) -> Package -> List (Html msg)
-packageInstructionsHtml onCopy pkg =
+packageInstructionsHtml : String -> String -> (String -> msg) -> Package -> List (Html msg)
+packageInstructionsHtml repositoryUrl recipeDirPackages onCopy pkg =
     if not (String.isEmpty pkg.name) then
         [ h2 [] [ text pkg.name ]
         , hr [] []
@@ -141,19 +151,19 @@ packageInstructionsHtml onCopy pkg =
             [ style "margin-bottom" "0em"
             ]
             [ text "A. Run package in a shell environment" ]
-        , codeBlock onCopy (runPackageShellCmd pkg)
+        , codeBlock onCopy (runPackageShellCmd repositoryUrl pkg)
         , p
             [ style "margin-bottom" "0em"
             ]
             [ text "B. Run package in a container" ]
-        , codeBlock onCopy (runPackageContainerCmd pkg)
+        , codeBlock onCopy (runPackageContainerCmd repositoryUrl pkg)
         , hr [] []
         , h3 [] [ text "DEVELOPMENT" ]
         , p
             [ style "margin-bottom" "0em"
             ]
             [ text "Enter development environment (all dependencies included)" ]
-        , codeBlock onCopy (enterPackageDevenvCmd pkg)
+        , codeBlock onCopy (enterPackageDevenvCmd repositoryUrl pkg)
         , hr [] []
         , text "Home page: "
         , a
@@ -164,10 +174,10 @@ packageInstructionsHtml onCopy pkg =
         , br [] []
         , text "Recipe : "
         , a
-            [ href ("https://github.com/imincik/nix-forge/blob/master/outputs/packages/" ++ pkg.name ++ "/recipe.nix")
+            [ href (repositoryToGithubUrl repositoryUrl ++ "/blob/master/" ++ recipeDirPackages ++ "/" ++ pkg.name ++ "/recipe.nix")
             , target "_blank"
             ]
-            [ text ("packages/" ++ pkg.name ++ "/recipe.nix") ]
+            [ text (recipeDirPackages ++ "/" ++ pkg.name ++ "/recipe.nix") ]
         ]
 
     else
@@ -175,32 +185,32 @@ packageInstructionsHtml onCopy pkg =
         ]
 
 
-runAppShellCmd : App -> String
-runAppShellCmd app =
-    format """nix shell github:imincik/nix-forge#{0}
-""" [ app.name ]
+runAppShellCmd : String -> App -> String
+runAppShellCmd repositoryUrl app =
+    format """nix shell {0}#{1}
+""" [ repositoryUrl, app.name ]
 
 
-runAppContainerCmd : App -> String
-runAppContainerCmd app =
-    format """nix build github:imincik/nix-forge#{0}.containers
+runAppContainerCmd : String -> App -> String
+runAppContainerCmd repositoryUrl app =
+    format """nix build {0}#{1}.containers
 
 for image in ./result/*.tar.gz; do
     podman load < $image
 done
 
 podman-compose --profile services --file $(pwd)/result/compose.yaml up
-""" [ app.name ]
+""" [ repositoryUrl, app.name ]
 
 
-runAppVmCmd : App -> String
-runAppVmCmd app =
-    format """nix run github:imincik/nix-forge#{0}.vm
-""" [ app.name ]
+runAppVmCmd : String -> App -> String
+runAppVmCmd repositoryUrl app =
+    format """nix run {0}#{1}.vm
+""" [ repositoryUrl, app.name ]
 
 
-appInstructionsHtml : (String -> msg) -> App -> List (Html msg)
-appInstructionsHtml onCopy app =
+appInstructionsHtml : String -> String -> (String -> msg) -> App -> List (Html msg)
+appInstructionsHtml repositoryUrl recipeDirApps onCopy app =
     if not (String.isEmpty app.name) then
         [ h2 [] [ text app.name ]
         , hr [] []
@@ -217,16 +227,16 @@ appInstructionsHtml onCopy app =
             [ style "margin-bottom" "0em"
             ]
             [ text "A. Run application programs (CLI, GUI) in a shell environment" ]
-        , codeBlock onCopy (runAppShellCmd app)
+        , codeBlock onCopy (runAppShellCmd repositoryUrl app)
         , p
             [ style "margin-bottom" "0em"
             ]
             [ text "B. Run application services in containers" ]
-        , codeBlock onCopy (runAppContainerCmd app)
+        , codeBlock onCopy (runAppContainerCmd repositoryUrl app)
         , if app.vm.enable then
             div []
                 [ p [ style "margin-bottom" "0em" ] [ text "C. Run application services in VM" ]
-                , codeBlock onCopy (runAppVmCmd app)
+                , codeBlock onCopy (runAppVmCmd repositoryUrl app)
                 ]
 
           else
@@ -234,10 +244,10 @@ appInstructionsHtml onCopy app =
         , hr [] []
         , text "Recipe: "
         , a
-            [ href ("https://github.com/imincik/nix-forge/blob/master/outputs/apps/" ++ app.name ++ "/recipe.nix")
+            [ href (repositoryToGithubUrl repositoryUrl ++ "/blob/master/" ++ recipeDirApps ++ "/" ++ app.name ++ "/recipe.nix")
             , target "_blank"
             ]
-            [ text ("apps/" ++ app.name ++ "/recipe.nix") ]
+            [ text (recipeDirApps ++ "/" ++ app.name ++ "/recipe.nix") ]
         , a
             [ href "options.html"
             , target "_blank"

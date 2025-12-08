@@ -6,6 +6,7 @@ Nix Forge is an attempt to lower the barrier and learning curve required for
 packaging and deploying software with Nix, enforce best practices and unlock the
 superpowers of Nix.
 
+
 ## Features
 
 * Simple, type checked configuration recipes for **packages** and
@@ -15,6 +16,8 @@ superpowers of Nix.
 * [Web UI](https://imincik.github.io/nix-forge)
 
 * [Recipe builder](https://imincik.github.io/nix-forge/options.html)
+
+* Easy [self hosting](#self-hosting)
 
 * [LLM support](./LLM.md)
 
@@ -34,7 +37,7 @@ superpowers of Nix.
 ## Packaging workflow
 
 1. Create a new package recipe file in
-   `outputs/packages/<package>/recipe.nix` and add it to git.
+   `recipes/packages/<package>/recipe.nix` and add it to git.
 
 1. Build package
 
@@ -50,9 +53,9 @@ nix build .#<package> -L
 
 ### Examples
 
-* [Package recipe examples](outputs/packages)
+* [Package recipe examples](recipes/packages)
 
-* [Application recipe examples](outputs/apps)
+* [Application recipe examples](recipes/apps)
 
 ### Debugging
 
@@ -73,6 +76,22 @@ and follow instructions.
 ```bash
 nix build .#<package>.test -L
 ```
+
+
+## Self hosting
+
+* Initiate new Nix Forge instance from template
+
+```bash
+nix flake init --template github:imincik/nix-forge#example
+```
+
+* Set `repositoryUrl` attribute in `flake.nix` to your repository
+
+* Add all new files to git
+
+* Create recipes  in `recipes` directory
+
 
 ## LLMs
 

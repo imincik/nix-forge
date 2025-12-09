@@ -10,6 +10,10 @@ let
   inherit (flake-parts-lib) mkPerSystemOption;
 in
 {
+  imports = [
+    ./assertions-warnings.nix
+  ];
+
   options = {
     perSystem = mkPerSystemOption (
       { config, pkgs, ... }:

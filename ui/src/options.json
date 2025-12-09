@@ -996,5 +996,53 @@
     ],
     "readOnly": false,
     "type": "module"
+  },
+  "perSystem.assertions.*.condition": {
+    "declarations": [],
+    "description": "Condition that must be true for the assertion to pass.",
+    "loc": [
+      "perSystem",
+      "assertions",
+      "*",
+      "condition"
+    ],
+    "readOnly": false,
+    "type": "boolean"
+  },
+  "perSystem.assertions.*.message": {
+    "declarations": [],
+    "description": "Error message to show when assertion fails.",
+    "loc": [
+      "perSystem",
+      "assertions",
+      "*",
+      "message"
+    ],
+    "readOnly": false,
+    "type": "string"
+  },
+  "perSystem.warnings.*.condition": {
+    "declarations": [],
+    "description": "Condition that triggers the warning when true.",
+    "loc": [
+      "perSystem",
+      "warnings",
+      "*",
+      "condition"
+    ],
+    "readOnly": false,
+    "type": "boolean"
+  },
+  "perSystem.warnings.*.message": {
+    "declarations": [],
+    "description": "Warning message to show.",
+    "loc": [
+      "perSystem",
+      "warnings",
+      "*",
+      "message"
+    ],
+    "readOnly": false,
+    "type": "string"
   }
 }

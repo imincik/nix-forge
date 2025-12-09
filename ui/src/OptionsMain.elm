@@ -792,8 +792,9 @@ generateRecipeContent category options =
 
 llmPromptText : String
 llmPromptText =
-    """Based on ./AGENTS.md file, analyze <SOURCE-CODE-REPOSITORY>
-and create a Nix Forge package and application recipes.
+    """Based on instructions in ./AGENTS.md file,
+analyze the <SOURCE-CODE-REPOSITORY-URL> and create a Nix Forge
+package and application recipes.
 """
 
 

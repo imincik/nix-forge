@@ -21,8 +21,10 @@ repositoryToGithubUrl : String -> String
 repositoryToGithubUrl repositoryUrl =
     if String.startsWith "github:" repositoryUrl then
         "https://github.com/" ++ String.dropLeft 7 repositoryUrl
+
     else if String.startsWith "path:" repositoryUrl then
         "#"
+
     else
         repositoryUrl
 
@@ -150,12 +152,12 @@ packageInstructionsHtml repositoryUrl recipeDirPackages onCopy pkg =
         , p
             [ style "margin-bottom" "0em"
             ]
-            [ text "A. Run package in a shell environment" ]
+            [ text "Run package in a shell environment" ]
         , codeBlock onCopy (runPackageShellCmd repositoryUrl pkg)
         , p
             [ style "margin-bottom" "0em"
             ]
-            [ text "B. Run package in a container" ]
+            [ text "Run package in a container" ]
         , codeBlock onCopy (runPackageContainerCmd repositoryUrl pkg)
         , hr [] []
         , h3 [] [ text "DEVELOPMENT" ]
@@ -223,24 +225,35 @@ appInstructionsHtml repositoryUrl recipeDirApps onCopy app =
 
           else
             text ""
-        , p
-            [ style "margin-bottom" "0em"
-            ]
-            [ text "A. Run application programs (CLI, GUI) in a shell environment" ]
-        , codeBlock onCopy (runAppShellCmd repositoryUrl app)
-        , p
-            [ style "margin-bottom" "0em"
-            ]
-            [ text "B. Run application services in containers" ]
-        , codeBlock onCopy (runAppContainerCmd repositoryUrl app)
+        , if not app.programs.enable && not app.containers.enable && not app.vm.enable then
+            p [ style "color" "red" ] [ text "No output is enabled for this app. Enable at least one of the - programs, containers or vm - in recipe file." ]
+
+          else
+            text ""
+        , if app.programs.enable then
+            div []
+                [ p [ style "margin-bottom" "0em" ] [ text "Run application programs (CLI, GUI) in a shell environment" ]
+                , codeBlock onCopy (runAppShellCmd repositoryUrl app)
+                ]
+
+          else
+            text ""
+        , if app.containers.enable then
+            div []
+                [ p [ style "margin-bottom" "0em" ] [ text "Run application services in containers" ]
+                , codeBlock onCopy (runAppContainerCmd repositoryUrl app)
+                ]
+
+          else
+            text ""
         , if app.vm.enable then
             div []
-                [ p [ style "margin-bottom" "0em" ] [ text "C. Run application services in VM" ]
+                [ p [ style "margin-bottom" "0em" ] [ text "Run application services in VM" ]
                 , codeBlock onCopy (runAppVmCmd repositoryUrl app)
                 ]
 
           else
-            p [] []
+            text ""
         , hr [] []
         , text "Recipe: "
         , a

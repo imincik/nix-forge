@@ -44,6 +44,8 @@ emptyApp =
     , description = ""
     , version = ""
     , usage = ""
+    , programs = { enable = False }
+    , containers = { enable = False }
     , vm = { enable = False }
     }
 
@@ -412,14 +414,24 @@ appHtml app selectedApp =
             [ class "mb-1 "
             ]
             [ small []
-                [ span [ class "badge bg-secondary me-1" ] [ text "shell" ]
-                , span [ class "badge bg-secondary me-1" ] [ text "containers" ]
-                , if app.vm.enable then
-                    span [ class "badge bg-secondary" ] [ text "vm" ]
+                (List.concat
+                    [ if app.programs.enable then
+                        [ span [ class "badge bg-secondary me-1" ] [ text "programs" ] ]
 
-                  else
-                    text ""
-                ]
+                      else
+                        []
+                    , if app.containers.enable then
+                        [ span [ class "badge bg-secondary me-1" ] [ text "containers" ] ]
+
+                      else
+                        []
+                    , if app.vm.enable then
+                        [ span [ class "badge bg-secondary" ] [ text "vm" ] ]
+
+                      else
+                        []
+                    ]
+                )
             ]
         ]
 

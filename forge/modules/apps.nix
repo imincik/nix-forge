@@ -76,6 +76,9 @@ in
 
                     # Programs shell configuration
                     programs = {
+                      enable = lib.mkEnableOption ''
+                        Programs bundle output.
+                      '';
                       requirements = lib.mkOption {
                         type = lib.types.listOf lib.types.package;
                         default = [ ];
@@ -84,6 +87,9 @@ in
 
                     # Container configuration
                     containers = {
+                      enable = lib.mkEnableOption ''
+                        Container images output.
+                      '';
                       images = lib.mkOption {
                         type = lib.types.listOf (
                           lib.types.submodule {
@@ -273,9 +279,8 @@ in
             appPassthru =
               # finalApp parameter is currently not used in this function
               app: finalApp:
-              {
-                containers = containerBundle app;
-              }
+              { }
+              // lib.optionalAttrs app.containers.enable { containers = containerBundle app; }
               // lib.optionalAttrs app.vm.enable { vm = nixosVm app; };
 
             allApps = lib.listToAttrs (

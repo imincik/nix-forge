@@ -33,12 +33,14 @@
   '';
 
   programs = {
+    enable = true;
     requirements = [
       pkgs.curl
     ];
   };
 
   containers = {
+    enable = true;
     images = [
       {
         name = "api";

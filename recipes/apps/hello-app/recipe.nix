@@ -11,12 +11,14 @@
   description = "Say hello in multiple languages.";
 
   programs = {
+    enable = true;
     requirements = [
       pkgs.mypkgs.hello
     ];
   };
 
   containers = {
+    enable = true;
     images = [
       {
         name = "hello-english";
@@ -47,12 +49,5 @@
       }
     ];
     composeFile = ./compose.yaml;
-  };
-
-  vm = {
-    name = "hello";
-    requirements = [
-      pkgs.mypkgs.hello
-    ];
   };
 }

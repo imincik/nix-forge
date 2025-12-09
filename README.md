@@ -19,7 +19,7 @@ superpowers of Nix.
 
 * Easy [self hosting](#self-hosting)
 
-* [LLM support](./LLM.md)
+* [LLM support](./AGENTS.md)
 
 ### Packages outputs
 
@@ -93,9 +93,9 @@ nix flake init --template github:imincik/nix-forge#example
 * Create recipes  in `recipes` directory
 
 
-## LLMs
+## LLM agents
 
-LLMs, read [these instructions](./LLM.md) first.
+LLM agents, read [these instructions](./AGENTS.md) first.
 
 
 ## TODOs

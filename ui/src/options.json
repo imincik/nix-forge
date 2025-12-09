@@ -393,7 +393,7 @@
       "_type": "literalExpression",
       "text": "[ ]"
     },
-    "description": "List of packages.",
+    "description": "List of packages to include in forge.\n\nEach package uses one of the available builders.\nOnly one builder can be enabled per package by setting build.<builder>.enable = true.\n",
     "loc": [
       "perSystem",
       "forge",
@@ -713,7 +713,11 @@
       "_type": "literalExpression",
       "text": "\"\""
     },
-    "description": "This option has no description.",
+    "description": "Package description.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "\"A program that prints greeting messages\""
+    },
     "loc": [
       "perSystem",
       "forge",
@@ -730,7 +734,11 @@
       "_type": "literalExpression",
       "text": "[ ]"
     },
-    "description": "This option has no description.",
+    "description": "Additional packages to include in the development environment.\n\nAll build requirements are automatically included.\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[ pkgs.git pkgs.vim ]"
+    },
     "loc": [
       "perSystem",
       "forge",
@@ -748,7 +756,11 @@
       "_type": "literalExpression",
       "text": "''\n  echo -e \"\\nWelcome. This environment contains all dependencies required\"\n  echo \"to build $DEVENV_PACKAGE_NAME from source.\"\n  echo\n  echo \"Grab the source code from $DEVENV_PACKAGE_SOURCE\"\n  echo \"or from the upstream repository and you are all set to start hacking.\"\n''"
     },
-    "description": "This option has no description.",
+    "description": "Bash script to run when entering the development environment.\n\nEnter with: nix develop .#<package>\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "''\necho \"Welcome to my-package development environment!\"\necho \"Run 'make' to build the project\"\n''\n"
+    },
     "loc": [
       "perSystem",
       "forge",
@@ -766,7 +778,11 @@
       "_type": "literalExpression",
       "text": "\"\""
     },
-    "description": "This option has no description.",
+    "description": "Package home page URL.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "\"https://www.gnu.org/software/hello/hello-2.12.1.tar.gz\""
+    },
     "loc": [
       "perSystem",
       "forge",
@@ -783,7 +799,7 @@
       "_type": "literalExpression",
       "text": "\"my-program\""
     },
-    "description": "This option has no description.",
+    "description": "Name of the main executable program.",
     "example": {
       "_type": "literalExpression",
       "text": "\"hello\""
@@ -804,7 +820,11 @@
       "_type": "literalExpression",
       "text": "\"my-package\""
     },
-    "description": "This option has no description.",
+    "description": "Package name.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "\"hello\""
+    },
     "loc": [
       "perSystem",
       "forge",
@@ -821,7 +841,7 @@
       "_type": "literalExpression",
       "text": "null"
     },
-    "description": "This option has no description.",
+    "description": "Git repository URL with revision.\n\nFormat: platform:owner/repo/revision\n",
     "example": {
       "_type": "literalExpression",
       "text": "\"github:my-user/my-repo/v1.0.0\""
@@ -843,7 +863,11 @@
       "_type": "literalExpression",
       "text": "\"\""
     },
-    "description": "This option has no description.",
+    "description": "Source code hash.\n\nUse empty string to get the hash during a first build.\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "\"sha256-jZkUKv2SV28wsM18tCqNxoCZmLxdYH2Idh9RLibH2yA=\""
+    },
     "loc": [
       "perSystem",
       "forge",
@@ -861,7 +885,7 @@
       "_type": "literalExpression",
       "text": "null"
     },
-    "description": "This option has no description.",
+    "description": "Relative path to local source code directory.",
     "example": {
       "_type": "literalExpression",
       "text": "./backend/src"
@@ -883,7 +907,7 @@
       "_type": "literalExpression",
       "text": "null"
     },
-    "description": "This option has no description.",
+    "description": "Source tarball URL.",
     "example": {
       "_type": "literalExpression",
       "text": "\"https://downloads.my-project/my-package-1.0.0.tar.gz\""
@@ -905,7 +929,11 @@
       "_type": "literalExpression",
       "text": "[ ]"
     },
-    "description": "This option has no description.",
+    "description": "Additional packages required for running tests.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[ pkgs.curl pkgs.jq ]"
+    },
     "loc": [
       "perSystem",
       "forge",
@@ -923,7 +951,11 @@
       "_type": "literalExpression",
       "text": "''\n  echo \"Test script\"\n''"
     },
-    "description": "This option has no description.",
+    "description": "Bash script to run package tests.\n\nThe package being tested is available in PATH.\nRun with: nix build .#<package>.test\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "''\nhello | grep \"Hello, world\"\n''\n"
+    },
     "loc": [
       "perSystem",
       "forge",
@@ -941,7 +973,11 @@
       "_type": "literalExpression",
       "text": "\"1.0.0\""
     },
-    "description": "This option has no description.",
+    "description": "Package version.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "\"2.12.1\""
+    },
     "loc": [
       "perSystem",
       "forge",

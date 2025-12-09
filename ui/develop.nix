@@ -71,9 +71,10 @@
 
               echo
               echo "Development server is running!"
-              echo "Live server: http://127.0.0.1:8080/index.html"
+              echo "  Live server: http://127.0.0.1:8080/index.html"
               echo
-              echo "Press Ctrl+C to stop all watchers and the server"
+              echo "Press Ctrl+C to stop all watchers and the server."
+              echo
 
               # Trap Ctrl+C to clean up all background jobs
               trap "echo 'Stopping all watchers and live-server...'; kill $LIVE_SERVER_PID $MAIN_WATCHER_PID $OPTIONS_WATCHER_PID $CONFIG_WATCHER_PID $OPTIONS_GEN_WATCHER_PID 2>/dev/null; rm -f live-server.pid; echo 'Stopped.'; return" INT

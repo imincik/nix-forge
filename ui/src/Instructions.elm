@@ -82,8 +82,8 @@ footerHtml =
                 [ href "https://github.com/imincik"
                 , target "_blank"
                 ]
-                [ text "@imincik" ]
-            , text " in "
+                [ text "@imincik." ]
+            , text " Contribute or report issues in "
             , a
                 [ href "https://github.com/imincik/nix-forge"
                 , target "_blank"

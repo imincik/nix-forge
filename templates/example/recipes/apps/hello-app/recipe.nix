@@ -11,12 +11,14 @@
   description = "Say hello to Nix.";
 
   programs = {
+    enable = true;
     requirements = [
       pkgs.mypkgs.hello-nix
     ];
   };
 
   containers = {
+    enable = true;
     images = [
       {
         name = "hello";

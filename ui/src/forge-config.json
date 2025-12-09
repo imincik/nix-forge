@@ -3,6 +3,7 @@
     {
       "containers": {
         "composeFile": "/nix/store/nw6szwqhv08zh1891y1a6pc0gbk6mwvc-compose.yaml",
+        "enable": true,
         "images": [
           {
             "config": {
@@ -48,6 +49,7 @@
       "description": "Say hello in multiple languages.",
       "name": "hello-app",
       "programs": {
+        "enable": true,
         "requirements": [
           "/nix/store/idim9ry5wzadd80j92741rlfapcnll6y-hello-2.12.1"
         ]
@@ -62,15 +64,14 @@
           "system": {}
         },
         "enable": false,
-        "name": "hello",
-        "requirements": [
-          "/nix/store/idim9ry5wzadd80j92741rlfapcnll6y-hello-2.12.1"
-        ]
+        "name": "nixos-vm",
+        "requirements": []
       }
     },
     {
       "containers": {
         "composeFile": "/nix/store/m3h5izj1pcdz6s2pmmz6yw6gh2g7rvq3-compose.yaml",
+        "enable": true,
         "images": [
           {
             "config": {
@@ -88,6 +89,7 @@
       "description": "Simple web application with database backend.",
       "name": "python-web-app",
       "programs": {
+        "enable": true,
         "requirements": [
           "/nix/store/8ggin0y50drxqzlkci4p71v2nan6gc7s-curl-8.14.1-bin"
         ]

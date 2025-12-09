@@ -32,6 +32,28 @@
     "readOnly": false,
     "type": "absolute path"
   },
+  "apps.*.containers.enable": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "false"
+    },
+    "description": "Whether to enable Container images output.\n.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "true"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "apps",
+      "*",
+      "containers",
+      "enable"
+    ],
+    "readOnly": false,
+    "type": "boolean"
+  },
   "apps.*.containers.images": {
     "declarations": [],
     "description": "This option has no description.",
@@ -140,6 +162,28 @@
     ],
     "readOnly": false,
     "type": "string"
+  },
+  "apps.*.programs.enable": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "false"
+    },
+    "description": "Whether to enable Programs bundle output.\n.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "true"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "apps",
+      "*",
+      "programs",
+      "enable"
+    ],
+    "readOnly": false,
+    "type": "boolean"
   },
   "apps.*.programs.requirements": {
     "declarations": [],

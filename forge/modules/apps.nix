@@ -26,11 +26,13 @@ in
                 programs = [
                   "apps.*.name"
                   "apps.*.version"
+                  "apps.*.programs.enable"
                   "apps.*.programs.requirements"
                 ];
                 containers = [
                   "apps.*.name"
                   "apps.*.version"
+                  "apps.*.containers.enable"
                   "apps.*.containers.images"
                   "apps.*.containers.composeFile"
                 ];

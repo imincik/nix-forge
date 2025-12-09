@@ -11,6 +11,7 @@ let
 in
 {
   imports = [
+    ./assertions-warnings.nix
     ./builders/shared.nix
     ./builders/plain-builder.nix
     ./builders/standard-builder.nix
@@ -254,7 +255,59 @@ in
         };
 
         # Config section is now provided by builder modules
-        config = { };
+        config =
+          let
+            cfg = config.forge.packages;
+
+            # Process warnings: filter to get active warnings (condition = true), then show them
+            activeWarnings = lib.filter (x: x.condition) config.warnings;
+            showWarnings = lib.foldr (w: acc: lib.warn w.message acc) true activeWarnings;
+
+            # Process assertions: filter to get failed assertions (condition = false)
+            failedAssertions = lib.filter (x: !x.condition) config.assertions;
+            assertionMessages = lib.concatMapStringsSep "\n" (x: "- ${x.message}") failedAssertions;
+          in
+          {
+            # Collect warnings from packages
+            warnings = lib.flatten (
+              map (pkg: {
+                condition = pkg.source.hash == "";
+                message = ''
+                  Package '${pkg.name}': source.hash is empty.
+                  Correct hash will be printed in the error message when package is built.
+                '';
+              }) cfg
+            );
+
+            # Collect assertions from packages
+            assertions = lib.flatten (
+              map (pkg: [
+                {
+                  condition = !(pkg.source.git == null && pkg.source.url == null && pkg.source.path == null);
+                  message = ''
+                    Package '${pkg.name}': one of sources options must be defined.
+                    Available options: source.git, source.url, or source.path.
+                  '';
+                }
+                {
+                  condition =
+                    pkg.build.plainBuilder.enable
+                    || pkg.build.standardBuilder.enable
+                    || pkg.build.pythonAppBuilder.enable;
+                  message = ''
+                    Package '${pkg.name}': one of builder options must be enabled.
+                    Available options: build.plainBuilder, build.standardBuilder, or build.pythonAppBuilder.'';
+                }
+              ]) cfg
+            );
+
+            # Evaluation check: show warnings first, then throw on failed assertions
+            _module.check =
+              if showWarnings then
+                if failedAssertions != [ ] then throw "\nFailed assertions:\n${assertionMessages}" else true
+              else
+                true;
+          };
       }
     );
   };

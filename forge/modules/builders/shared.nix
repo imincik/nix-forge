@@ -25,9 +25,6 @@ in
               };
             in
             pkg:
-            assert
-              (pkg.source.git == null && pkg.source.url == null && pkg.source.path == null)
-              -> throw "'source.git', 'source.url' or 'source.path' must be defined for ${pkg.name}";
             # 1. Use path if provided
             if pkg.source.path != null then
               pkg.source.path

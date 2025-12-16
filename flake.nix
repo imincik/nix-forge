@@ -43,9 +43,9 @@
 
       imports = [
         (import ./forge/flake-module.nix { inherit inputs; })
-        ./ui/develop.nix
-        ./checks.nix
-        ./templates.nix
+        ./flake/develop.nix
+        ./flake/checks.nix
+        ./flake/templates.nix
       ];
 
       _module.args.rootPath = ./.;

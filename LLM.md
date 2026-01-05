@@ -8,10 +8,11 @@ This specification guides LLMs in generating Nix Forge recipes - declarative con
 
 **IMPORTANT:** Nix Forge currently supports the following types of projects:
 
-1. **Python packages** - Projects with `pyproject.toml` or `setup.py` (use `pythonAppBuilder`)
-2. **CMake-based projects** - Projects with `CMakeLists.txt` (use `standardBuilder`)
-3. **Autotools-based projects** - Projects with `configure` or `configure.ac` (use `standardBuilder`)
-4. **Makefile-based projects** - Projects with standard `Makefile` targets (use `standardBuilder`)
+1. **Python applications** - Projects with `pyproject.toml` or `setup.py` that provide CLI tools (use `pythonAppBuilder`)
+2. **Python libraries** - Projects with `pyproject.toml` or `setup.py` meant to be imported by other packages (use `pythonPackageBuilder`)
+3. **CMake-based projects** - Projects with `CMakeLists.txt` (use `standardBuilder`)
+4. **Autotools-based projects** - Projects with `configure` or `configure.ac` (use `standardBuilder`)
+5. **Makefile-based projects** - Projects with standard `Makefile` targets (use `standardBuilder`)
 
 
 ## Recipe File Structure
@@ -82,9 +83,10 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
   source.hash = "sha256-...";      # Required with url, optional with git
 
   # Builder: EXACTLY ONE must be enabled
-  build.plainBuilder.enable = true;      # OR
-  build.standardBuilder.enable = true;   # OR
-  build.pythonAppBuilder.enable = true;
+  build.plainBuilder.enable = true;        # OR
+  build.standardBuilder.enable = true;     # OR
+  build.pythonAppBuilder.enable = true;    # OR
+  build.pythonPackageBuilder.enable = true;
 }
 ```
 
@@ -158,7 +160,7 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 - Special environment setup required
 
 ### 3. pythonAppBuilder (Python Applications)
-**When to use**: Python applications with pyproject.toml
+**When to use**: Python applications with pyproject.toml that provide executable programs
 
 ```nix
 {
@@ -175,7 +177,41 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 }
 ```
 
+**Characteristics**:
+- Uses `buildPythonApplication` internally
+- Creates standalone applications with entry points
+- Prevents the package from being used as a dependency by other Python packages
+- Use for: CLI tools, web applications, standalone Python programs
+
+### 4. pythonPackageBuilder (Python Libraries)
+**When to use**: Python libraries/packages with pyproject.toml that other packages depend on
+
+```nix
+{
+  build.pythonPackageBuilder = {
+    enable = true;
+    requirements.build-system = [
+      pkgs.python3Packages.setuptools
+    ];
+    requirements.dependencies = [
+      pkgs.python3Packages.numpy
+      pkgs.python3Packages.attrs
+    ];
+  };
+}
+```
+
+**Characteristics**:
+- Uses `buildPythonPackage` internally
+- Creates reusable Python libraries
+- Can be used as dependencies by other Python packages
+- Use for: Python libraries, frameworks, utility modules
+
 **Note**: Use pkgs.python3Packages.* for Python dependencies
+
+**Choosing between pythonAppBuilder and pythonPackageBuilder**:
+- **pythonAppBuilder**: For programs meant to be run (`mypy`, `black`, `fio`)
+- **pythonPackageBuilder**: For libraries meant to be imported (`requests`, `numpy`, `attrs`)
 
 ## Source Configuration
 
@@ -386,7 +422,10 @@ Before generating a recipe, determine:
 ### 2. Builder Selection Logic
 ```
 IF Python project with pyproject.toml:
-  → pythonAppBuilder
+  IF provides CLI tools/executables (has [project.scripts] or entry_points):
+    → pythonAppBuilder
+  ELSE IF library meant to be imported:
+    → pythonPackageBuilder
 
 ELSE IF has configure script OR uses CMake OR standard Makefile:
   → standardBuilder
@@ -409,7 +448,8 @@ source.hash = "";  # Leave empty initially
 ```
 
 ### 5. Validation Checklist
-- [ ] Exactly one builder enabled
+- [ ] Exactly one builder enabled (plainBuilder, standardBuilder, pythonAppBuilder, or pythonPackageBuilder)
+- [ ] For Python projects: correct builder chosen (pythonAppBuilder for apps, pythonPackageBuilder for libraries)
 - [ ] Source has git XOR url (not both)
 - [ ] Hash present for URL sources
 - [ ] name is lowercase-with-hyphens
@@ -535,6 +575,47 @@ source.hash = "";  # Leave empty initially
 }
 ```
 
+### Pattern 4: Python Library
+```nix
+{
+  config,
+  lib,
+  pkgs,
+  mypkgs,
+  ...
+}:
+
+{
+  name = "requests";
+  version = "2.31.0";
+  description = "Python HTTP library for humans.";
+  homePage = "https://requests.readthedocs.io";
+  mainProgram = "";  # No main program for libraries
+
+  source = {
+    git = "github:psf/requests/v2.31.0";
+    hash = "sha256-...";
+  };
+
+  build.pythonPackageBuilder = {
+    enable = true;
+    requirements.build-system = [
+      pkgs.python3Packages.setuptools
+    ];
+    requirements.dependencies = [
+      pkgs.python3Packages.charset-normalizer
+      pkgs.python3Packages.idna
+      pkgs.python3Packages.urllib3
+      pkgs.python3Packages.certifi
+    ];
+  };
+
+  test.script = ''
+    python -c "import requests; print(requests.__version__)" | grep "2.31.0"
+  '';
+}
+```
+
 ## Error Handling
 
 ### Common Issues and Solutions
@@ -584,8 +665,12 @@ This section provides a systematic process for analyzing third-party software re
 Check for these files in the repository (in order of priority):
 
 1. **Python Projects**
-   - `pyproject.toml` → Use `pythonAppBuilder`
-   - `setup.py` → Use `pythonAppBuilder`
+   - `pyproject.toml` → Check for `[project.scripts]` or entry points
+     - Has CLI tools/executables → Use `pythonAppBuilder`
+     - Library/module only → Use `pythonPackageBuilder`
+   - `setup.py` → Check for `entry_points` or `console_scripts`
+     - Has CLI tools/executables → Use `pythonAppBuilder`
+     - Library/module only → Use `pythonPackageBuilder`
 
 2. **CMake Projects**
    - `CMakeLists.txt` → Use `standardBuilder`
@@ -867,9 +952,15 @@ build.extraDrvAttrs = {
 START: What type of project is this?
 
 ├─ Has pyproject.toml or setup.py?
-│  └─ YES → Use pythonAppBuilder
-│     ├─ build-system: setuptools, cython, etc.
-│     └─ dependencies: runtime Python packages
+│  └─ YES → Python Project
+│     ├─ Check pyproject.toml for [project.scripts] or setup.py for entry_points
+│     ├─ Has executable entry points?
+│     │  ├─ YES → Use pythonAppBuilder (CLI tools, applications)
+│     │  │     ├─ build-system: setuptools, cython, etc.
+│     │  │     └─ dependencies: runtime Python packages
+│     │  └─ NO → Use pythonPackageBuilder (libraries, modules)
+│     │        ├─ build-system: setuptools, cython, etc.
+│     │        └─ dependencies: runtime Python packages
 │
 ├─ Has CMakeLists.txt?
 │  └─ YES → Use standardBuilder
@@ -957,7 +1048,7 @@ When asked to create a Nix Forge recipe from a git repository, follow this workf
 1. Create package directory: `mkdir -p recipes/packages/<name>`
 2. Write `recipe.nix` with:
    - Basic metadata (name, version, description, homePage, mainProgram)
-   - Appropriate builder (pythonAppBuilder or standardBuilder)
+   - Appropriate builder (pythonAppBuilder, pythonPackageBuilder, or standardBuilder)
    - `source.hash = ""` (leave empty initially)
    - Initial dependencies based on research
    - Basic test script (at minimum: `--help` and `--version`)
@@ -1131,10 +1222,12 @@ This example demonstrates a Python project with complex dependencies:
 
 **Key points in this example:**
 
-1. **pythonAppBuilder**: Used for Python projects
+1. **pythonAppBuilder**: Used for Python applications with CLI tools (fio command)
 2. **GDAL in both build-system and dependencies**: Needed at build time (for `gdal-config`) and runtime
 3. **postPatch**: Relaxes strict version constraint that would otherwise fail
 4. **Test script**: Tests both the Python module import and CLI tool
+
+**Note**: If this were a library without the `fio` CLI tool, use `pythonPackageBuilder` instead.
 
 ## Quick Reference Checklist
 
@@ -1142,8 +1235,9 @@ Before creating a recipe, gather this information:
 
 - [ ] Project name (lowercase-with-hyphens)
 - [ ] Latest stable version
-- [ ] Build system type (Python/CMake/Autotools/Makefile)
-- [ ] Main executable name
+- [ ] Build system type (Python app/library/CMake/Autotools/Makefile)
+- [ ] For Python: Does it provide CLI tools or is it a library?
+- [ ] Main executable name (if applicable)
 - [ ] Homepage URL
 - [ ] Build dependencies (libraries, tools)
 - [ ] Runtime dependencies
@@ -1153,7 +1247,7 @@ Before creating a recipe, gather this information:
 
 During recipe creation:
 
-- [ ] Choose correct builder (pythonAppBuilder or standardBuilder)
+- [ ] Choose correct builder (pythonAppBuilder for apps, pythonPackageBuilder for libraries, or standardBuilder)
 - [ ] Leave source.hash empty initially
 - [ ] Add recipe to git BEFORE building
 - [ ] Build to get correct hash

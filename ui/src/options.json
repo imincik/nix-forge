@@ -644,6 +644,69 @@
     "readOnly": false,
     "type": "list of package"
   },
+  "packages.*.build.pythonPackageBuilder.enable": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "false"
+    },
+    "description": "Whether to enable Python package builder.\n.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "true"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "packages",
+      "*",
+      "build",
+      "pythonPackageBuilder",
+      "enable"
+    ],
+    "readOnly": false,
+    "type": "boolean"
+  },
+  "packages.*.build.pythonPackageBuilder.requirements.build-system": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "[ ]"
+    },
+    "description": "This option has no description.",
+    "loc": [
+      "perSystem",
+      "forge",
+      "packages",
+      "*",
+      "build",
+      "pythonPackageBuilder",
+      "requirements",
+      "build-system"
+    ],
+    "readOnly": false,
+    "type": "list of package"
+  },
+  "packages.*.build.pythonPackageBuilder.requirements.dependencies": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "[ ]"
+    },
+    "description": "This option has no description.",
+    "loc": [
+      "perSystem",
+      "forge",
+      "packages",
+      "*",
+      "build",
+      "pythonPackageBuilder",
+      "requirements",
+      "dependencies"
+    ],
+    "readOnly": false,
+    "type": "list of package"
+  },
   "packages.*.build.standardBuilder.enable": {
     "declarations": [],
     "default": {

@@ -10,7 +10,7 @@
     }:
 
     {
-      devShells.ui = pkgs.mkShell {
+      devShells.default = pkgs.mkShell {
         packages = with pkgs; [
           entr
           jq

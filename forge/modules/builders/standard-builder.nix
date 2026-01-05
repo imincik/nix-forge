@@ -56,6 +56,7 @@ in
                         pname = pkg.name;
                         version = pkg.version;
                         src = sharedBuildAttrs.pkgSource pkg;
+                        patches = pkg.source.patches;
                         nativeBuildInputs = pkg.build.standardBuilder.requirements.native;
                         buildInputs = pkg.build.standardBuilder.requirements.build;
                         passthru = sharedBuildAttrs.pkgPassthru pkg finalAttrs.finalPackage;

@@ -32,6 +32,7 @@ in
                   "packages.*.name"
                   "packages.*.version"
                   "packages.*.source.git"
+                  "packages.*.source.patches"
                   "packages.*.build.plainBuilder.enable"
                   "packages.*.build.plainBuilder.requirements.native"
                   "packages.*.build.plainBuilder.requirements.build"
@@ -45,6 +46,7 @@ in
                   "packages.*.name"
                   "packages.*.version"
                   "packages.*.source.git"
+                  "packages.*.source.patches"
                   "packages.*.build.standardBuilder.enable"
                   "packages.*.build.standardBuilder.requirements.native"
                   "packages.*.build.standardBuilder.requirements.build"
@@ -54,6 +56,7 @@ in
                   "packages.*.name"
                   "packages.*.version"
                   "packages.*.source.git"
+                  "packages.*.source.patches"
                   "packages.*.build.pythonAppBuilder.enable"
                   "packages.*.build.pythonAppBuilder.requirements.build-system"
                   "packages.*.build.pythonAppBuilder.requirements.dependencies"
@@ -144,6 +147,16 @@ in
                           Use empty string to get the hash during a first build.
                         '';
                         example = "sha256-jZkUKv2SV28wsM18tCqNxoCZmLxdYH2Idh9RLibH2yA=";
+                      };
+                      patches = lib.mkOption {
+                        type = lib.types.listOf lib.types.path;
+                        default = [ ];
+                        description = ''
+                          List of patch files to apply to the source code.
+
+                          Patches are applied in the order specified using the patch command.
+                        '';
+                        example = lib.literalExpression "[ ./fix-build.patch ./add-feature.patch ]";
                       };
                     };
 

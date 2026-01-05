@@ -201,6 +201,7 @@
       "source": {
         "git": "github:OSGeo/gdal/3679e5e4511ae8b4a956ded7ef7be23fdb86b7db",
         "hash": "sha256-0cHD1+vEAahllGNOe6Y4uec44HmCvlJphRj8JPJzOXc=",
+        "patches": [],
         "path": null,
         "url": null
       },
@@ -243,7 +244,7 @@
           }
         }
       },
-      "description": "GEOS package built from GitHub source.",
+      "description": "GEOS package built from GitHub source with version set using custom patch.",
       "development": {
         "requirements": [],
         "shellHook": "echo -e \"\\nWelcome. This environment contains all dependencies required\"\necho \"to build $DEVENV_PACKAGE_NAME from source.\"\necho\necho \"Grab the source code from $DEVENV_PACKAGE_SOURCE\"\necho \"or from the upstream repository and you are all set to start hacking.\"\n"
@@ -254,14 +255,17 @@
       "source": {
         "git": "github:libgeos/geos/883f237d1ecbf49f8efd09905df05814783c5b50",
         "hash": "sha256-enHSmHW8bgRIv33cQrlllF6rbrCkXfqQilcu53LQiRE=",
+        "patches": [
+          "/nix/store/qfp3bz8bjzh1b3rr8hg42r7g6ma9i45s-version-1000.patch"
+        ],
         "path": null,
         "url": null
       },
       "test": {
         "requirements": [],
-        "script": "geosop | grep -E \"GEOS.[0-9]*\\.[0-9]*\\.[0-9]*\"\n"
+        "script": "geosop | grep -E \"geosop - GEOS 1000.0.0dev\"\n"
       },
-      "version": "2025-10-03"
+      "version": "1000.0.0"
     },
     {
       "build": {
@@ -304,6 +308,7 @@
       "source": {
         "git": null,
         "hash": "sha256-jZkUKv2SV28wsM18tCqNxoCZmLxdYH2Idh9RLibH2yA=",
+        "patches": [],
         "path": null,
         "url": "mirror://gnu/hello/hello-2.12.1.tar.gz"
       },
@@ -359,6 +364,7 @@
       "source": {
         "git": "github:imincik/python-web-example/bd57b302e930f3b8b80448d2c08a3aac7d48e4ec",
         "hash": "sha256-nSW5746+criXHPrxmJ+0zhJCMwl78eer03qQAvDIo5U=",
+        "patches": [],
         "path": null,
         "url": null
       },
@@ -374,6 +380,7 @@
       "packages.*.name",
       "packages.*.version",
       "packages.*.source.git",
+      "packages.*.source.patches",
       "packages.*.build.plainBuilder.enable",
       "packages.*.build.plainBuilder.requirements.native",
       "packages.*.build.plainBuilder.requirements.build",
@@ -387,6 +394,7 @@
       "packages.*.name",
       "packages.*.version",
       "packages.*.source.git",
+      "packages.*.source.patches",
       "packages.*.build.pythonAppBuilder.enable",
       "packages.*.build.pythonAppBuilder.requirements.build-system",
       "packages.*.build.pythonAppBuilder.requirements.dependencies",
@@ -396,6 +404,7 @@
       "packages.*.name",
       "packages.*.version",
       "packages.*.source.git",
+      "packages.*.source.patches",
       "packages.*.build.standardBuilder.enable",
       "packages.*.build.standardBuilder.requirements.native",
       "packages.*.build.standardBuilder.requirements.build",

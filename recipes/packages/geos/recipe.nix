@@ -7,14 +7,17 @@
 
 {
   name = "geos";
-  version = "2025-10-03";
-  description = "GEOS package built from GitHub source.";
+  version = "1000.0.0";
+  description = "GEOS package built from GitHub source with version set using custom patch.";
   homePage = "https://libgeos.org";
   mainProgram = "geosop";
 
   source = {
     git = "github:libgeos/geos/883f237d1ecbf49f8efd09905df05814783c5b50";
     hash = "sha256-enHSmHW8bgRIv33cQrlllF6rbrCkXfqQilcu53LQiRE=";
+    patches = [
+      ./version-1000.patch
+    ];
   };
 
   build.plainBuilder = {
@@ -43,6 +46,6 @@
   };
 
   test.script = ''
-    geosop | grep -E "GEOS.[0-9]*\.[0-9]*\.[0-9]*"
+    geosop | grep -E "geosop - GEOS 1000.0.0dev"
   '';
 }

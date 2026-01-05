@@ -201,6 +201,26 @@ source = {
 };
 ```
 
+### Patches
+Apply patch files to the source code before building:
+
+```nix
+source = {
+  git = "github:owner/repo/v1.0.0";
+  hash = "sha256-...";
+  patches = [
+    ./fix-build-issue.patch
+    ./add-feature.patch
+  ];
+};
+```
+
+**Notes**:
+- Patches are applied in the order specified
+- Patch files must be relative paths (e.g., `./fix.patch`)
+- Patches are applied using the standard `patch` command
+- Works with all source types (git, url, path)
+
 ## Test Configuration
 
 ```nix

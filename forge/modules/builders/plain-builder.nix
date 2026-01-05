@@ -72,6 +72,7 @@ in
                         pname = pkg.name;
                         version = pkg.version;
                         src = sharedBuildAttrs.pkgSource pkg;
+                        patches = pkg.source.patches;
                         nativeBuildInputs = pkg.build.plainBuilder.requirements.native;
                         buildInputs = pkg.build.plainBuilder.requirements.build;
                         configurePhase = pkg.build.plainBuilder.configure;

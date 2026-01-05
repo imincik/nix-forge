@@ -879,6 +879,28 @@
     "readOnly": false,
     "type": "string"
   },
+  "packages.*.source.patches": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "[ ]"
+    },
+    "description": "List of patch files to apply to the source code.\n\nPatches are applied in the order specified using the patch command.\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[ ./fix-build.patch ./add-feature.patch ]"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "packages",
+      "*",
+      "source",
+      "patches"
+    ],
+    "readOnly": false,
+    "type": "list of absolute path"
+  },
   "packages.*.source.path": {
     "declarations": [],
     "default": {

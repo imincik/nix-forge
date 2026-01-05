@@ -59,6 +59,7 @@ in
                         version = pkg.version;
                         format = "pyproject";
                         src = sharedBuildAttrs.pkgSource pkg;
+                        patches = pkg.source.patches;
                         build-system = pkg.build.pythonAppBuilder.requirements.build-system;
                         dependencies = pkg.build.pythonAppBuilder.requirements.dependencies;
                         passthru = sharedBuildAttrs.pkgPassthru pkg thePackage;

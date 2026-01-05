@@ -178,6 +178,13 @@
             "dependencies": []
           }
         },
+        "pythonPackageBuilder": {
+          "enable": false,
+          "requirements": {
+            "build-system": [],
+            "dependencies": []
+          }
+        },
         "standardBuilder": {
           "enable": true,
           "requirements": {
@@ -236,6 +243,13 @@
             "dependencies": []
           }
         },
+        "pythonPackageBuilder": {
+          "enable": false,
+          "requirements": {
+            "build-system": [],
+            "dependencies": []
+          }
+        },
         "standardBuilder": {
           "enable": false,
           "requirements": {
@@ -283,6 +297,13 @@
           }
         },
         "pythonAppBuilder": {
+          "enable": false,
+          "requirements": {
+            "build-system": [],
+            "dependencies": []
+          }
+        },
+        "pythonPackageBuilder": {
           "enable": false,
           "requirements": {
             "build-system": [],
@@ -345,6 +366,13 @@
             ]
           }
         },
+        "pythonPackageBuilder": {
+          "enable": false,
+          "requirements": {
+            "build-system": [],
+            "dependencies": []
+          }
+        },
         "standardBuilder": {
           "enable": false,
           "requirements": {
@@ -373,6 +401,71 @@
         "script": "echo \"Test script\"\n"
       },
       "version": "0.0.1"
+    },
+    {
+      "build": {
+        "debug": false,
+        "extraDrvAttrs": {},
+        "plainBuilder": {
+          "build": "echo 'Build phase'",
+          "check": "echo 'Check phase'",
+          "configure": "echo 'Configure phase'",
+          "enable": false,
+          "install": "echo 'Install phase'",
+          "requirements": {
+            "build": [],
+            "native": []
+          }
+        },
+        "pythonAppBuilder": {
+          "enable": false,
+          "requirements": {
+            "build-system": [],
+            "dependencies": []
+          }
+        },
+        "pythonPackageBuilder": {
+          "enable": true,
+          "requirements": {
+            "build-system": [
+              "/nix/store/ybb7fxf4gx0y3yqynh39sr6qhkzp832i-python3.13-setuptools-80.9.0"
+            ],
+            "dependencies": [
+              "/nix/store/l71is046x0rj88sp37h8rj2ci2vb2rjg-python3.13-charset-normalizer-3.4.3",
+              "/nix/store/klfh83ikviwpnpffp3rp2dav8vq0nw2n-python3.13-idna-3.10",
+              "/nix/store/dmh9kcaliifdkk6nah6fnwfkm93vvykb-python3.13-urllib3-2.5.0",
+              "/nix/store/rs70njhg79czsvp6jgm31g3xp0rl6w3f-python3.13-certifi-2025.07.14"
+            ]
+          }
+        },
+        "standardBuilder": {
+          "enable": false,
+          "requirements": {
+            "build": [],
+            "native": []
+          }
+        }
+      },
+      "description": "Python HTTP library for humans.",
+      "development": {
+        "requirements": [],
+        "shellHook": "echo -e \"\\nWelcome. This environment contains all dependencies required\"\necho \"to build $DEVENV_PACKAGE_NAME from source.\"\necho\necho \"Grab the source code from $DEVENV_PACKAGE_SOURCE\"\necho \"or from the upstream repository and you are all set to start hacking.\"\n"
+      },
+      "homePage": "https://requests.readthedocs.io",
+      "mainProgram": "",
+      "name": "requests",
+      "source": {
+        "git": "github:psf/requests/v2.32.5",
+        "hash": "sha256-cEBalMFoYFaGG8M48k+OEBvzLegzrTNP1NxH2ljP6qg=",
+        "patches": [],
+        "path": null,
+        "url": null
+      },
+      "test": {
+        "requirements": [],
+        "script": "python -c \"import requests; print(requests.__version__)\" | grep \"2.32.5\"\npython -c \"import requests; assert hasattr(requests, 'get')\"\npython -c \"import requests; assert hasattr(requests, 'post')\"\n"
+      },
+      "version": "2.32.5"
     }
   ],
   "packagesFilter": {
@@ -398,6 +491,16 @@
       "packages.*.build.pythonAppBuilder.enable",
       "packages.*.build.pythonAppBuilder.requirements.build-system",
       "packages.*.build.pythonAppBuilder.requirements.dependencies",
+      "packages.*.test.script"
+    ],
+    "pythonPackageBuilder": [
+      "packages.*.name",
+      "packages.*.version",
+      "packages.*.source.git",
+      "packages.*.source.patches",
+      "packages.*.build.pythonPackageBuilder.enable",
+      "packages.*.build.pythonPackageBuilder.requirements.build-system",
+      "packages.*.build.pythonPackageBuilder.requirements.dependencies",
       "packages.*.test.script"
     ],
     "standardBuilder": [

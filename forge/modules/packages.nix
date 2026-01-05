@@ -16,6 +16,7 @@ in
     ./builders/plain-builder.nix
     ./builders/standard-builder.nix
     ./builders/python-app-builder.nix
+    ./builders/python-package-builder.nix
   ];
 
   options = {
@@ -60,6 +61,16 @@ in
                   "packages.*.build.pythonAppBuilder.enable"
                   "packages.*.build.pythonAppBuilder.requirements.build-system"
                   "packages.*.build.pythonAppBuilder.requirements.dependencies"
+                  "packages.*.test.script"
+                ];
+                pythonPackageBuilder = [
+                  "packages.*.name"
+                  "packages.*.version"
+                  "packages.*.source.git"
+                  "packages.*.source.patches"
+                  "packages.*.build.pythonPackageBuilder.enable"
+                  "packages.*.build.pythonPackageBuilder.requirements.build-system"
+                  "packages.*.build.pythonPackageBuilder.requirements.dependencies"
                   "packages.*.test.script"
                 ];
               };
@@ -306,10 +317,11 @@ in
                   condition =
                     pkg.build.plainBuilder.enable
                     || pkg.build.standardBuilder.enable
-                    || pkg.build.pythonAppBuilder.enable;
+                    || pkg.build.pythonAppBuilder.enable
+                    || pkg.build.pythonPackageBuilder.enable;
                   message = ''
                     Package '${pkg.name}': one of builder options must be enabled.
-                    Available options: build.plainBuilder, build.standardBuilder, or build.pythonAppBuilder.'';
+                    Available options: build.plainBuilder, build.standardBuilder, build.pythonAppBuilder, or build.pythonPackageBuilder.'';
                 }
               ]) cfg
             );

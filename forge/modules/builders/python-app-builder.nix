@@ -21,18 +21,21 @@ in
                 options = {
                   build.pythonAppBuilder = {
                     enable = lib.mkEnableOption ''
-                      Python application builder.
-                    '';
+                      Python application builder for executable Python programs.
+
+                      Uses buildPythonApplication which prevents the package from being used as a dependency'';
                     requirements = {
                       build-system = lib.mkOption {
                         type = lib.types.listOf lib.types.package;
                         default = [ ];
                         description = "PEP-517 build system dependencies.";
+                        example = lib.literalExpression "[ pkgs.python3Packages.setuptools pkgs.python3Packages.wheel ]";
                       };
                       dependencies = lib.mkOption {
                         type = lib.types.listOf lib.types.package;
                         default = [ ];
                         description = "Runtime dependencies (PEP-621).";
+                        example = lib.literalExpression "[ pkgs.python3Packages.click pkgs.python3Packages.requests ]";
                       };
                       optional-dependencies = lib.mkOption {
                         type = lib.types.attrsOf (lib.types.listOf lib.types.package);

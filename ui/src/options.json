@@ -581,6 +581,29 @@
     "readOnly": false,
     "type": "list of package"
   },
+  "packages.*.build.pythonAppBuilder.disabledTests": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "[ ]"
+    },
+    "description": "List of pytest test names to skip.\n\nUseful for disabling flaky or network-dependent tests.\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[\n  \"test_network\"\n  \"test_integration\"\n]"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "packages",
+      "*",
+      "build",
+      "pythonAppBuilder",
+      "disabledTests"
+    ],
+    "readOnly": false,
+    "type": "list of string"
+  },
   "packages.*.build.pythonAppBuilder.enable": {
     "declarations": [],
     "default": {
@@ -604,13 +627,59 @@
     "readOnly": false,
     "type": "boolean"
   },
+  "packages.*.build.pythonAppBuilder.importsCheck": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "[ ]"
+    },
+    "description": "List of Python modules to verify can be imported after installation.\n\nThis provides a simple smoke test to ensure the package was built correctly.\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[\n  \"myapp\"\n  \"myapp.cli\"\n]"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "packages",
+      "*",
+      "build",
+      "pythonAppBuilder",
+      "importsCheck"
+    ],
+    "readOnly": false,
+    "type": "list of string"
+  },
+  "packages.*.build.pythonAppBuilder.relaxDeps": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "[ ]"
+    },
+    "description": "Remove version constraints from specified dependencies.\n\nUse when the package requires specific versions but works fine with versions in nixpkgs.\nSet to true to relax all dependencies, or provide a list of dependency names.\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[\n  \"click\"\n  \"attrs\"\n]"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "packages",
+      "*",
+      "build",
+      "pythonAppBuilder",
+      "relaxDeps"
+    ],
+    "readOnly": false,
+    "type": "boolean or list of string"
+  },
   "packages.*.build.pythonAppBuilder.requirements.build-system": {
     "declarations": [],
     "default": {
       "_type": "literalExpression",
       "text": "[ ]"
     },
-    "description": "This option has no description.",
+    "description": "PEP-517 build system dependencies.",
     "loc": [
       "perSystem",
       "forge",
@@ -630,7 +699,7 @@
       "_type": "literalExpression",
       "text": "[ ]"
     },
-    "description": "This option has no description.",
+    "description": "Runtime dependencies (PEP-621).",
     "loc": [
       "perSystem",
       "forge",
@@ -643,6 +712,53 @@
     ],
     "readOnly": false,
     "type": "list of package"
+  },
+  "packages.*.build.pythonAppBuilder.requirements.optional-dependencies": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "{ }"
+    },
+    "description": "PEP-621 optional dependencies (extras).\n\nThese are additional dependencies that can be installed optionally.\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "{\n  dev = [ pkgs.python3Packages.pytest ];\n  redis = [ pkgs.python3Packages.redis ];\n}\n"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "packages",
+      "*",
+      "build",
+      "pythonAppBuilder",
+      "requirements",
+      "optional-dependencies"
+    ],
+    "readOnly": false,
+    "type": "attribute set of list of package"
+  },
+  "packages.*.build.pythonPackageBuilder.disabledTests": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "[ ]"
+    },
+    "description": "List of pytest test names to skip.\n\nUseful for disabling flaky or network-dependent tests.\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[\n  \"test_network\"\n  \"test_integration\"\n]"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "packages",
+      "*",
+      "build",
+      "pythonPackageBuilder",
+      "disabledTests"
+    ],
+    "readOnly": false,
+    "type": "list of string"
   },
   "packages.*.build.pythonPackageBuilder.enable": {
     "declarations": [],
@@ -667,13 +783,59 @@
     "readOnly": false,
     "type": "boolean"
   },
+  "packages.*.build.pythonPackageBuilder.importsCheck": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "[ ]"
+    },
+    "description": "List of Python modules to verify can be imported after installation.\n\nThis provides a simple smoke test to ensure the package was built correctly.\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[\n  \"requests\"\n  \"requests.auth\"\n]"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "packages",
+      "*",
+      "build",
+      "pythonPackageBuilder",
+      "importsCheck"
+    ],
+    "readOnly": false,
+    "type": "list of string"
+  },
+  "packages.*.build.pythonPackageBuilder.relaxDeps": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "[ ]"
+    },
+    "description": "Remove version constraints from specified dependencies.\n\nUse when the package requires specific versions but works fine with versions in nixpkgs.\nSet to true to relax all dependencies, or provide a list of dependency names.\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[\n  \"click\"\n  \"attrs\"\n]"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "packages",
+      "*",
+      "build",
+      "pythonPackageBuilder",
+      "relaxDeps"
+    ],
+    "readOnly": false,
+    "type": "boolean or list of string"
+  },
   "packages.*.build.pythonPackageBuilder.requirements.build-system": {
     "declarations": [],
     "default": {
       "_type": "literalExpression",
       "text": "[ ]"
     },
-    "description": "This option has no description.",
+    "description": "PEP-517 build system dependencies.",
     "loc": [
       "perSystem",
       "forge",
@@ -693,7 +855,7 @@
       "_type": "literalExpression",
       "text": "[ ]"
     },
-    "description": "This option has no description.",
+    "description": "Runtime dependencies (PEP-621).",
     "loc": [
       "perSystem",
       "forge",
@@ -706,6 +868,30 @@
     ],
     "readOnly": false,
     "type": "list of package"
+  },
+  "packages.*.build.pythonPackageBuilder.requirements.optional-dependencies": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "{ }"
+    },
+    "description": "PEP-621 optional dependencies (extras).\n\nThese are additional dependencies that can be installed optionally.\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "{\n  dev = [ pkgs.python3Packages.pytest ];\n  redis = [ pkgs.python3Packages.redis ];\n}\n"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "packages",
+      "*",
+      "build",
+      "pythonPackageBuilder",
+      "requirements",
+      "optional-dependencies"
+    ],
+    "readOnly": false,
+    "type": "attribute set of list of package"
   },
   "packages.*.build.standardBuilder.enable": {
     "declarations": [],

@@ -166,13 +166,23 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 {
   build.pythonAppBuilder = {
     enable = true;
-    requirements.build-system = [
-      pkgs.python3Packages.setuptools
-    ];
-    requirements.dependencies = [
-      pkgs.python3Packages.flask
-      pkgs.python3Packages.requests
-    ];
+    requirements = {
+      build-system = [
+        pkgs.python3Packages.setuptools
+      ];
+      dependencies = [
+        pkgs.python3Packages.flask
+        pkgs.python3Packages.requests
+      ];
+      optional-dependencies = {      # PEP-621 extras (optional)
+        dev = [
+          pkgs.python3Packages.pytest
+        ];
+      };
+    };
+    importsCheck = [ "myapp" ];      # Verify imports work (optional)
+    relaxDeps = [ "flask" ];         # Remove version constraints (optional)
+    disabledTests = [ "test_network" ]; # Skip specific tests (optional)
   };
 }
 ```
@@ -183,6 +193,16 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 - Prevents the package from being used as a dependency by other Python packages
 - Use for: CLI tools, web applications, standalone Python programs
 
+**Additional Options** (same as pythonPackageBuilder):
+- **optional-dependencies**: PEP-621 optional dependency groups (extras)
+  - Maps to nixpkgs: `optional-dependencies`
+- **importsCheck**: List of modules to verify can be imported
+  - Maps to nixpkgs: `pythonImportsCheck`
+- **relaxDeps**: Remove version constraints from dependencies (list or true for all)
+  - Maps to nixpkgs: `pythonRelaxDeps`
+- **disabledTests**: Skip specific pytest test names
+  - Maps to nixpkgs: `disabledTests`
+
 ### 4. pythonPackageBuilder (Python Libraries)
 **When to use**: Python libraries/packages with pyproject.toml that other packages depend on
 
@@ -190,13 +210,23 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 {
   build.pythonPackageBuilder = {
     enable = true;
-    requirements.build-system = [
-      pkgs.python3Packages.setuptools
-    ];
-    requirements.dependencies = [
-      pkgs.python3Packages.numpy
-      pkgs.python3Packages.attrs
-    ];
+    requirements = {
+      build-system = [
+        pkgs.python3Packages.setuptools
+      ];
+      dependencies = [
+        pkgs.python3Packages.numpy
+        pkgs.python3Packages.attrs
+      ];
+      optional-dependencies = {      # PEP-621 extras (optional)
+        dev = [
+          pkgs.python3Packages.pytest
+        ];
+      };
+    };
+    importsCheck = [ "mylib" ];      # Verify imports work (optional)
+    relaxDeps = [ "numpy" ];         # Remove version constraints (optional)
+    disabledTests = [ "test_slow" ]; # Skip specific tests (optional)
   };
 }
 ```
@@ -206,6 +236,16 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 - Creates reusable Python libraries
 - Can be used as dependencies by other Python packages
 - Use for: Python libraries, frameworks, utility modules
+
+**Additional Options**:
+- **optional-dependencies**: PEP-621 optional dependency groups (extras)
+  - Maps to nixpkgs: `optional-dependencies`
+- **importsCheck**: List of modules to verify can be imported
+  - Maps to nixpkgs: `pythonImportsCheck`
+- **relaxDeps**: Remove version constraints from dependencies (list or true for all)
+  - Maps to nixpkgs: `pythonRelaxDeps`
+- **disabledTests**: Skip specific pytest test names
+  - Maps to nixpkgs: `disabledTests`
 
 **Note**: Use pkgs.python3Packages.* for Python dependencies
 

@@ -61,6 +61,10 @@ in
                   "packages.*.build.pythonAppBuilder.enable"
                   "packages.*.build.pythonAppBuilder.requirements.build-system"
                   "packages.*.build.pythonAppBuilder.requirements.dependencies"
+                  "packages.*.build.pythonAppBuilder.requirements.optional-dependencies"
+                  "packages.*.build.pythonAppBuilder.importsCheck"
+                  "packages.*.build.pythonAppBuilder.relaxDeps"
+                  "packages.*.build.pythonAppBuilder.disabledTests"
                   "packages.*.test.script"
                 ];
                 pythonPackageBuilder = [
@@ -71,6 +75,10 @@ in
                   "packages.*.build.pythonPackageBuilder.enable"
                   "packages.*.build.pythonPackageBuilder.requirements.build-system"
                   "packages.*.build.pythonPackageBuilder.requirements.dependencies"
+                  "packages.*.build.pythonPackageBuilder.requirements.optional-dependencies"
+                  "packages.*.build.pythonPackageBuilder.importsCheck"
+                  "packages.*.build.pythonPackageBuilder.relaxDeps"
+                  "packages.*.build.pythonPackageBuilder.disabledTests"
                   "packages.*.test.script"
                 ];
               };

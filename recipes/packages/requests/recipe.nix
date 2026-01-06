@@ -30,6 +30,9 @@
         pkgs.python3Packages.certifi
       ];
     };
+    importsCheck = [
+      "requests"
+    ];
   };
 
   test.script = ''

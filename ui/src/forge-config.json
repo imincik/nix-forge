@@ -15,7 +15,7 @@
             },
             "name": "hello-english",
             "requirements": [
-              "/nix/store/idim9ry5wzadd80j92741rlfapcnll6y-hello-2.12.1"
+              "/nix/store/gh01diw3gfaqk09y266dg84ycp3cb7x4-hello-2.12.1"
             ]
           },
           {
@@ -28,7 +28,7 @@
             },
             "name": "hello-italian",
             "requirements": [
-              "/nix/store/idim9ry5wzadd80j92741rlfapcnll6y-hello-2.12.1"
+              "/nix/store/gh01diw3gfaqk09y266dg84ycp3cb7x4-hello-2.12.1"
             ]
           },
           {
@@ -41,7 +41,7 @@
             },
             "name": "hello-spanish",
             "requirements": [
-              "/nix/store/idim9ry5wzadd80j92741rlfapcnll6y-hello-2.12.1"
+              "/nix/store/gh01diw3gfaqk09y266dg84ycp3cb7x4-hello-2.12.1"
             ]
           }
         ]
@@ -51,7 +51,7 @@
       "programs": {
         "enable": true,
         "requirements": [
-          "/nix/store/idim9ry5wzadd80j92741rlfapcnll6y-hello-2.12.1"
+          "/nix/store/gh01diw3gfaqk09y266dg84ycp3cb7x4-hello-2.12.1"
         ]
       },
       "usage": "",
@@ -81,7 +81,7 @@
             },
             "name": "api",
             "requirements": [
-              "/nix/store/nr7d9xysggiv6cj5f3jd22ka580i7ljg-python-web-0.0.1"
+              "/nix/store/44fnyshrqwm3cm3r22a42qrqvgrvf6wa-python-web-0.0.1"
             ]
           }
         ]
@@ -91,7 +91,7 @@
       "programs": {
         "enable": true,
         "requirements": [
-          "/nix/store/8ggin0y50drxqzlkci4p71v2nan6gc7s-curl-8.14.1-bin"
+          "/nix/store/cr9yz1bdfs9vj9cpr85ihrkgzgawgcwa-curl-8.17.0-bin"
         ]
       },
       "usage": "This is a simple example app which provides a web API to manage a list of\nusers.\n\n* Initialize database\n```\n  curl -X POST localhost:5000/init\n```\n\n* Add a new user\n```\n  curl -X POST \\\n    --header \"Content-Type: application/json\" \\\n    --data '{\"name\":\"username\"}' \\\n  localhost:5000/users\n```\n\n* Get list of all users\n```\n  curl localhost:5000/users\n```\n",
@@ -114,7 +114,7 @@
             "systemd": {
               "services": {
                 "api": {
-                  "script": "/nix/store/nr7d9xysggiv6cj5f3jd22ka580i7ljg-python-web-0.0.1/bin/python-web",
+                  "script": "/nix/store/44fnyshrqwm3cm3r22a42qrqvgrvf6wa-python-web-0.0.1/bin/python-web",
                   "wantedBy": [
                     "multi-user.target"
                   ]
@@ -172,27 +172,35 @@
           }
         },
         "pythonAppBuilder": {
+          "disabledTests": [],
           "enable": false,
+          "importsCheck": [],
+          "relaxDeps": [],
           "requirements": {
             "build-system": [],
-            "dependencies": []
+            "dependencies": [],
+            "optional-dependencies": {}
           }
         },
         "pythonPackageBuilder": {
+          "disabledTests": [],
           "enable": false,
+          "importsCheck": [],
+          "relaxDeps": [],
           "requirements": {
             "build-system": [],
-            "dependencies": []
+            "dependencies": [],
+            "optional-dependencies": {}
           }
         },
         "standardBuilder": {
           "enable": true,
           "requirements": {
             "build": [
-              "/nix/store/njhrpc02gq7501vi1kr2jl1ml603hid0-proj-9.6.1"
+              "/nix/store/gww4gj82mf3n54rw6awd12gqv42hz1fy-proj-9.7.1"
             ],
             "native": [
-              "/nix/store/a94d5zmalqava26y3hqsnj5l11l5kl5y-cmake-3.31.7"
+              "/nix/store/wmb16s8hw1vd25vvidwnncpzq126lcz3-cmake-4.1.2"
             ]
           }
         }
@@ -231,23 +239,31 @@
           "requirements": {
             "build": [],
             "native": [
-              "/nix/store/a94d5zmalqava26y3hqsnj5l11l5kl5y-cmake-3.31.7",
-              "/nix/store/7bgiqc706pzzb1gmwgpzdfg491w4a8nx-ninja-1.13.1"
+              "/nix/store/wmb16s8hw1vd25vvidwnncpzq126lcz3-cmake-4.1.2",
+              "/nix/store/4vxdgiak2ab3s853wz18wj11rmzw8bv6-ninja-1.13.2"
             ]
           }
         },
         "pythonAppBuilder": {
+          "disabledTests": [],
           "enable": false,
+          "importsCheck": [],
+          "relaxDeps": [],
           "requirements": {
             "build-system": [],
-            "dependencies": []
+            "dependencies": [],
+            "optional-dependencies": {}
           }
         },
         "pythonPackageBuilder": {
+          "disabledTests": [],
           "enable": false,
+          "importsCheck": [],
+          "relaxDeps": [],
           "requirements": {
             "build-system": [],
-            "dependencies": []
+            "dependencies": [],
+            "optional-dependencies": {}
           }
         },
         "standardBuilder": {
@@ -297,17 +313,25 @@
           }
         },
         "pythonAppBuilder": {
+          "disabledTests": [],
           "enable": false,
+          "importsCheck": [],
+          "relaxDeps": [],
           "requirements": {
             "build-system": [],
-            "dependencies": []
+            "dependencies": [],
+            "optional-dependencies": {}
           }
         },
         "pythonPackageBuilder": {
+          "disabledTests": [],
           "enable": false,
+          "importsCheck": [],
+          "relaxDeps": [],
           "requirements": {
             "build-system": [],
-            "dependencies": []
+            "dependencies": [],
+            "optional-dependencies": {}
           }
         },
         "standardBuilder": {
@@ -355,22 +379,30 @@
           }
         },
         "pythonAppBuilder": {
+          "disabledTests": [],
           "enable": true,
+          "importsCheck": [],
+          "relaxDeps": [],
           "requirements": {
             "build-system": [
-              "/nix/store/ybb7fxf4gx0y3yqynh39sr6qhkzp832i-python3.13-setuptools-80.9.0"
+              "/nix/store/bq3172qx0c68yv0i4wy51y1bzln4wndr-python3.13-setuptools-80.9.0"
             ],
             "dependencies": [
-              "/nix/store/jsmqjsbglcp4gzl4aqi085a2x8ljb5r6-python3.13-flask-3.1.2",
-              "/nix/store/d7hfqw6w4zk7ga6swc4f07gd2i5lj1fx-python3.13-psycopg2-2.9.10"
-            ]
+              "/nix/store/khxpw9ys6n3byzxrwwavfs0c1qpwcjym-python3.13-flask-3.1.2",
+              "/nix/store/l3i5sdvcz7m5ig5i6qpi00laprs49w39-python3.13-psycopg2-2.9.11"
+            ],
+            "optional-dependencies": {}
           }
         },
         "pythonPackageBuilder": {
+          "disabledTests": [],
           "enable": false,
+          "importsCheck": [],
+          "relaxDeps": [],
           "requirements": {
             "build-system": [],
-            "dependencies": []
+            "dependencies": [],
+            "optional-dependencies": {}
           }
         },
         "standardBuilder": {
@@ -418,24 +450,34 @@
           }
         },
         "pythonAppBuilder": {
+          "disabledTests": [],
           "enable": false,
+          "importsCheck": [],
+          "relaxDeps": [],
           "requirements": {
             "build-system": [],
-            "dependencies": []
+            "dependencies": [],
+            "optional-dependencies": {}
           }
         },
         "pythonPackageBuilder": {
+          "disabledTests": [],
           "enable": true,
+          "importsCheck": [
+            "requests"
+          ],
+          "relaxDeps": [],
           "requirements": {
             "build-system": [
-              "/nix/store/ybb7fxf4gx0y3yqynh39sr6qhkzp832i-python3.13-setuptools-80.9.0"
+              "/nix/store/bq3172qx0c68yv0i4wy51y1bzln4wndr-python3.13-setuptools-80.9.0"
             ],
             "dependencies": [
-              "/nix/store/l71is046x0rj88sp37h8rj2ci2vb2rjg-python3.13-charset-normalizer-3.4.3",
-              "/nix/store/klfh83ikviwpnpffp3rp2dav8vq0nw2n-python3.13-idna-3.10",
-              "/nix/store/dmh9kcaliifdkk6nah6fnwfkm93vvykb-python3.13-urllib3-2.5.0",
-              "/nix/store/rs70njhg79czsvp6jgm31g3xp0rl6w3f-python3.13-certifi-2025.07.14"
-            ]
+              "/nix/store/42aid278gbmrfgk9dls8c07g6skvpw5a-python3.13-charset-normalizer-3.4.3",
+              "/nix/store/vcdrklbn7jgk5c3nzxzzk3lqr3hcc8cr-python3.13-idna-3.11",
+              "/nix/store/f709yi2ha24wcdi7jry4a8g3l6qkcwc1-python3.13-urllib3-2.6.0",
+              "/nix/store/x6v1ysinz15dxj2rjn4f07b9xndy4rbd-python3.13-certifi-2025.07.14"
+            ],
+            "optional-dependencies": {}
           }
         },
         "standardBuilder": {
@@ -491,6 +533,10 @@
       "packages.*.build.pythonAppBuilder.enable",
       "packages.*.build.pythonAppBuilder.requirements.build-system",
       "packages.*.build.pythonAppBuilder.requirements.dependencies",
+      "packages.*.build.pythonAppBuilder.requirements.optional-dependencies",
+      "packages.*.build.pythonAppBuilder.importsCheck",
+      "packages.*.build.pythonAppBuilder.relaxDeps",
+      "packages.*.build.pythonAppBuilder.disabledTests",
       "packages.*.test.script"
     ],
     "pythonPackageBuilder": [
@@ -501,6 +547,10 @@
       "packages.*.build.pythonPackageBuilder.enable",
       "packages.*.build.pythonPackageBuilder.requirements.build-system",
       "packages.*.build.pythonPackageBuilder.requirements.dependencies",
+      "packages.*.build.pythonPackageBuilder.requirements.optional-dependencies",
+      "packages.*.build.pythonPackageBuilder.importsCheck",
+      "packages.*.build.pythonPackageBuilder.relaxDeps",
+      "packages.*.build.pythonPackageBuilder.disabledTests",
       "packages.*.test.script"
     ],
     "standardBuilder": [

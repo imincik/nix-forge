@@ -117,9 +117,21 @@ in
                             };
                           }
                         );
+                        default = [ ];
+                        description = "List of container images to build.";
+                        example = lib.literalExpression ''
+                          [
+                            {
+                              name = "api";
+                              requirements = [ mypkgs.my-package ];
+                              config.CMD = [ "my-command" ];
+                            }
+                          ]
+                        '';
                       };
                       composeFile = lib.mkOption {
-                        type = lib.types.path;
+                        type = lib.types.nullOr lib.types.path;
+                        default = null;
                         description = "Relative path to a container compose file.";
                         example = "./compose.yaml";
                       };
@@ -226,8 +238,8 @@ in
                   name = "${image.name}.tar.gz";
                   path = buildImage image;
                 }) app.containers.images)
-                # Compose file
-                ++ [
+                # Compose file (optional)
+                ++ lib.optionals (app.containers.composeFile != null) [
                   {
                     name = "compose.yaml";
                     path = pkgs.writeTextFile {

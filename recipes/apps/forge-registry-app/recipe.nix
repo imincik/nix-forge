@@ -14,25 +14,25 @@
     and allows to load Nix Forge containers directly to Docker, Podman or
     Kubernetes.
 
-    1. Deploy registry in a shell environment (see instructions below)
+    * Deploy registry in a shell environment (see instructions below)
        and launch it
     ```
       forge-registry
     ```
 
-    2. Launch example package container with Podman
+    * Launch example package container with Podman
     ```
       podman run -it --tls-verify=false \
       localhost:6443/packages/hello:latest
     ```
 
-    3. Launch example application with Podman
+    * Launch example application with Podman
     ```
       podman run -it --tls-verify=false \
       localhost:6443/applications/python-web-app/api:latest
     ```
 
-    4. Launch example application with Kubernetes
+    * Launch example application with Kubernetes
     ```
       kubectl run python-web \
       --image=localhost:6443/applications/python-web-app/api:latest

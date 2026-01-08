@@ -160,17 +160,6 @@
       "build": {
         "debug": false,
         "extraDrvAttrs": {},
-        "plainBuilder": {
-          "build": "echo 'Build phase'",
-          "check": "echo 'Check phase'",
-          "configure": "echo 'Configure phase'",
-          "enable": false,
-          "install": "echo 'Install phase'",
-          "requirements": {
-            "build": [],
-            "native": []
-          }
-        },
         "pythonAppBuilder": {
           "disabledTests": [],
           "enable": false,
@@ -230,20 +219,6 @@
       "build": {
         "debug": false,
         "extraDrvAttrs": {},
-        "plainBuilder": {
-          "build": "make -j $NIX_BUILD_CORES\n",
-          "check": "ctest --output-on-failure\n",
-          "configure": "mkdir build && cd build\n\ncmake ${CMAKE_ARGS} \\\n  -D CMAKE_BUILD_TYPE=Release \\\n  -D CMAKE_INSTALL_PREFIX=$out \\\n  ..\n",
-          "enable": true,
-          "install": "make install -j $NIX_BUILD_CORES\n",
-          "requirements": {
-            "build": [],
-            "native": [
-              "/nix/store/wmb16s8hw1vd25vvidwnncpzq126lcz3-cmake-4.1.2",
-              "/nix/store/4vxdgiak2ab3s853wz18wj11rmzw8bv6-ninja-1.13.2"
-            ]
-          }
-        },
         "pythonAppBuilder": {
           "disabledTests": [],
           "enable": false,
@@ -267,10 +242,13 @@
           }
         },
         "standardBuilder": {
-          "enable": false,
+          "enable": true,
           "requirements": {
             "build": [],
-            "native": []
+            "native": [
+              "/nix/store/wmb16s8hw1vd25vvidwnncpzq126lcz3-cmake-4.1.2",
+              "/nix/store/4vxdgiak2ab3s853wz18wj11rmzw8bv6-ninja-1.13.2"
+            ]
           }
         }
       },
@@ -301,17 +279,6 @@
       "build": {
         "debug": false,
         "extraDrvAttrs": {},
-        "plainBuilder": {
-          "build": "echo 'Build phase'",
-          "check": "echo 'Check phase'",
-          "configure": "echo 'Configure phase'",
-          "enable": false,
-          "install": "echo 'Install phase'",
-          "requirements": {
-            "build": [],
-            "native": []
-          }
-        },
         "pythonAppBuilder": {
           "disabledTests": [],
           "enable": false,
@@ -367,17 +334,6 @@
       "build": {
         "debug": false,
         "extraDrvAttrs": {},
-        "plainBuilder": {
-          "build": "echo 'Build phase'",
-          "check": "echo 'Check phase'",
-          "configure": "echo 'Configure phase'",
-          "enable": false,
-          "install": "echo 'Install phase'",
-          "requirements": {
-            "build": [],
-            "native": []
-          }
-        },
         "pythonAppBuilder": {
           "disabledTests": [],
           "enable": true,
@@ -438,17 +394,6 @@
       "build": {
         "debug": false,
         "extraDrvAttrs": {},
-        "plainBuilder": {
-          "build": "echo 'Build phase'",
-          "check": "echo 'Check phase'",
-          "configure": "echo 'Configure phase'",
-          "enable": false,
-          "install": "echo 'Install phase'",
-          "requirements": {
-            "build": [],
-            "native": []
-          }
-        },
         "pythonAppBuilder": {
           "disabledTests": [],
           "enable": false,
@@ -511,20 +456,6 @@
     }
   ],
   "packagesFilter": {
-    "plainBuilder": [
-      "packages.*.name",
-      "packages.*.version",
-      "packages.*.source.git",
-      "packages.*.source.patches",
-      "packages.*.build.plainBuilder.enable",
-      "packages.*.build.plainBuilder.requirements.native",
-      "packages.*.build.plainBuilder.requirements.build",
-      "packages.*.build.plainBuilder.configure",
-      "packages.*.build.plainBuilder.build",
-      "packages.*.build.plainBuilder.check",
-      "packages.*.build.plainBuilder.install",
-      "packages.*.test.script"
-    ],
     "pythonAppBuilder": [
       "packages.*.name",
       "packages.*.version",

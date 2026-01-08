@@ -83,7 +83,6 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
   source.hash = "sha256-...";      # Required with url, optional with git
 
   # Builder: EXACTLY ONE must be enabled
-  build.plainBuilder.enable = true;        # OR
   build.standardBuilder.enable = true;     # OR
   build.pythonAppBuilder.enable = true;    # OR
   build.pythonPackageBuilder.enable = true;
@@ -124,42 +123,7 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 - Follows standard build conventions
 - Use for: C/C++ projects with configure scripts or CMake
 
-### 2. plainBuilder (Custom Build)
-**When to use**: Non-standard build processes requiring custom phases
-
-```nix
-{
-  build.plainBuilder = {
-    enable = true;
-    requirements.native = [
-      pkgs.cmake
-    ];
-    requirements.build = [
-      pkgs.somelib
-    ];
-    configure = ''
-      mkdir build && cd build
-      cmake -DCMAKE_INSTALL_PREFIX=$out ..
-    '';
-    build = ''
-      make -j $NIX_BUILD_CORES
-    '';
-    check = ''
-      make test
-    '';
-    install = ''
-      make install
-    '';
-  };
-}
-```
-
-**When to use**:
-- Custom build steps needed
-- Non-standard directory structure
-- Special environment setup required
-
-### 3. pythonAppBuilder (Python Applications)
+### 2. pythonAppBuilder (Python Applications)
 **When to use**: Python applications with pyproject.toml that provide executable programs
 
 ```nix
@@ -203,7 +167,7 @@ error: flake does not provide attribute 'packages.x86_64-linux.<package-name>'
 - **disabledTests**: Skip specific pytest test names
   - Maps to nixpkgs: `disabledTests`
 
-### 4. pythonPackageBuilder (Python Libraries)
+### 3. pythonPackageBuilder (Python Libraries)
 **When to use**: Python libraries/packages with pyproject.toml that other packages depend on
 
 ```nix
@@ -469,9 +433,7 @@ IF Python project with pyproject.toml:
 
 ELSE IF has configure script OR uses CMake OR standard Makefile:
   → standardBuilder
-
-ELSE IF custom build process:
-  → plainBuilder
+  (Use build.extraDrvAttrs for custom build configuration)
 ```
 
 ### 3. Dependency Resolution
@@ -488,7 +450,7 @@ source.hash = "";  # Leave empty initially
 ```
 
 ### 5. Validation Checklist
-- [ ] Exactly one builder enabled (plainBuilder, standardBuilder, pythonAppBuilder, or pythonPackageBuilder)
+- [ ] Exactly one builder enabled (standardBuilder, pythonAppBuilder, or pythonPackageBuilder)
 - [ ] For Python projects: correct builder chosen (pythonAppBuilder for apps, pythonPackageBuilder for libraries)
 - [ ] Source has git XOR url (not both)
 - [ ] Hash present for URL sources
@@ -1012,15 +974,12 @@ START: What type of project is this?
 │     ├─ native: autoconf, automake, libtool, pkg-config
 │     └─ build: libraries
 │
-├─ Has Makefile with standard targets?
-│  └─ YES → Use standardBuilder
-│     ├─ Check for: all, install, clean targets
-│     ├─ native: make, pkg-config
-│     └─ build: libraries
-│
-└─ Custom/non-standard build?
-   └─ Use plainBuilder
-      └─ Define custom configure/build/install phases
+└─ Has Makefile with standard targets?
+   └─ YES → Use standardBuilder
+      ├─ Check for: all, install, clean targets
+      ├─ native: make, pkg-config
+      └─ build: libraries
+      └─ For custom configuration: use build.extraDrvAttrs
 ```
 
 ## Common Dependencies Mapping

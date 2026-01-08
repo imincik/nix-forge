@@ -103,5 +103,3 @@ LLM agents, read [these instructions](./AGENTS.md) first.
 * CI checks and workflows (dependencies updates, ...)
 
 * Many more language speciffic builders and configuration options
-
-* Firecracker microVM support

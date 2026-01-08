@@ -20,29 +20,12 @@
     ];
   };
 
-  build.plainBuilder = {
+  build.standardBuilder = {
     enable = true;
     requirements.native = [
       pkgs.cmake
       pkgs.ninja
     ];
-    configure = ''
-      mkdir build && cd build
-
-      cmake ''${CMAKE_ARGS} \
-        -D CMAKE_BUILD_TYPE=Release \
-        -D CMAKE_INSTALL_PREFIX=$out \
-        ..
-    '';
-    build = ''
-      make -j ''$NIX_BUILD_CORES
-    '';
-    check = ''
-      ctest --output-on-failure
-    '';
-    install = ''
-      make install -j ''$NIX_BUILD_CORES
-    '';
   };
 
   test.script = ''

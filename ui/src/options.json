@@ -442,145 +442,6 @@
     "readOnly": false,
     "type": "attribute set of anything"
   },
-  "packages.*.build.plainBuilder.build": {
-    "declarations": [],
-    "default": {
-      "_type": "literalExpression",
-      "text": "\"echo 'Build phase'\""
-    },
-    "description": "This option has no description.",
-    "loc": [
-      "perSystem",
-      "forge",
-      "packages",
-      "*",
-      "build",
-      "plainBuilder",
-      "build"
-    ],
-    "readOnly": false,
-    "type": "string"
-  },
-  "packages.*.build.plainBuilder.check": {
-    "declarations": [],
-    "default": {
-      "_type": "literalExpression",
-      "text": "\"echo 'Check phase'\""
-    },
-    "description": "This option has no description.",
-    "loc": [
-      "perSystem",
-      "forge",
-      "packages",
-      "*",
-      "build",
-      "plainBuilder",
-      "check"
-    ],
-    "readOnly": false,
-    "type": "string"
-  },
-  "packages.*.build.plainBuilder.configure": {
-    "declarations": [],
-    "default": {
-      "_type": "literalExpression",
-      "text": "\"echo 'Configure phase'\""
-    },
-    "description": "This option has no description.",
-    "loc": [
-      "perSystem",
-      "forge",
-      "packages",
-      "*",
-      "build",
-      "plainBuilder",
-      "configure"
-    ],
-    "readOnly": false,
-    "type": "string"
-  },
-  "packages.*.build.plainBuilder.enable": {
-    "declarations": [],
-    "default": {
-      "_type": "literalExpression",
-      "text": "false"
-    },
-    "description": "Whether to enable Plain builder.\n.",
-    "example": {
-      "_type": "literalExpression",
-      "text": "true"
-    },
-    "loc": [
-      "perSystem",
-      "forge",
-      "packages",
-      "*",
-      "build",
-      "plainBuilder",
-      "enable"
-    ],
-    "readOnly": false,
-    "type": "boolean"
-  },
-  "packages.*.build.plainBuilder.install": {
-    "declarations": [],
-    "default": {
-      "_type": "literalExpression",
-      "text": "\"echo 'Install phase'\""
-    },
-    "description": "This option has no description.",
-    "loc": [
-      "perSystem",
-      "forge",
-      "packages",
-      "*",
-      "build",
-      "plainBuilder",
-      "install"
-    ],
-    "readOnly": false,
-    "type": "string"
-  },
-  "packages.*.build.plainBuilder.requirements.build": {
-    "declarations": [],
-    "default": {
-      "_type": "literalExpression",
-      "text": "[ ]"
-    },
-    "description": "This option has no description.",
-    "loc": [
-      "perSystem",
-      "forge",
-      "packages",
-      "*",
-      "build",
-      "plainBuilder",
-      "requirements",
-      "build"
-    ],
-    "readOnly": false,
-    "type": "list of package"
-  },
-  "packages.*.build.plainBuilder.requirements.native": {
-    "declarations": [],
-    "default": {
-      "_type": "literalExpression",
-      "text": "[ ]"
-    },
-    "description": "This option has no description.",
-    "loc": [
-      "perSystem",
-      "forge",
-      "packages",
-      "*",
-      "build",
-      "plainBuilder",
-      "requirements",
-      "native"
-    ],
-    "readOnly": false,
-    "type": "list of package"
-  },
   "packages.*.build.pythonAppBuilder.disabledTests": {
     "declarations": [],
     "default": {
@@ -610,7 +471,7 @@
       "_type": "literalExpression",
       "text": "false"
     },
-    "description": "Whether to enable Python application builder.\n.",
+    "description": "Whether to enable Python application builder for executable Python programs.\n\nUses buildPythonApplication which prevents the package from being used as a dependency.",
     "example": {
       "_type": "literalExpression",
       "text": "true"
@@ -680,6 +541,10 @@
       "text": "[ ]"
     },
     "description": "PEP-517 build system dependencies.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[ pkgs.python3Packages.setuptools pkgs.python3Packages.wheel ]"
+    },
     "loc": [
       "perSystem",
       "forge",
@@ -700,6 +565,10 @@
       "text": "[ ]"
     },
     "description": "Runtime dependencies (PEP-621).",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[ pkgs.python3Packages.click pkgs.python3Packages.requests ]"
+    },
     "loc": [
       "perSystem",
       "forge",
@@ -766,7 +635,7 @@
       "_type": "literalExpression",
       "text": "false"
     },
-    "description": "Whether to enable Python package builder.\n.",
+    "description": "Whether to enable Python package builder for reusable Python libraries.\n\nUses buildPythonPackage which allows the package to be used as a dependency by other packages.",
     "example": {
       "_type": "literalExpression",
       "text": "true"
@@ -836,6 +705,10 @@
       "text": "[ ]"
     },
     "description": "PEP-517 build system dependencies.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[ pkgs.python3Packages.setuptools pkgs.python3Packages.wheel ]"
+    },
     "loc": [
       "perSystem",
       "forge",
@@ -856,6 +729,10 @@
       "text": "[ ]"
     },
     "description": "Runtime dependencies (PEP-621).",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[ pkgs.python3Packages.numpy pkgs.python3Packages.attrs ]"
+    },
     "loc": [
       "perSystem",
       "forge",
@@ -899,7 +776,7 @@
       "_type": "literalExpression",
       "text": "false"
     },
-    "description": "Whether to enable Standard builder.\n.",
+    "description": "Whether to enable Standard builder for autotools, CMake, or Makefile-based projects.\n\nAutomatically handles configure, build, and install phases.",
     "example": {
       "_type": "literalExpression",
       "text": "true"
@@ -922,7 +799,11 @@
       "_type": "literalExpression",
       "text": "[ ]"
     },
-    "description": "This option has no description.",
+    "description": "Runtime dependencies (target architecture).\n\nLibraries needed by the package at runtime.\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[ pkgs.openssl pkgs.sqlite pkgs.zlib ]"
+    },
     "loc": [
       "perSystem",
       "forge",
@@ -942,7 +823,11 @@
       "_type": "literalExpression",
       "text": "[ ]"
     },
-    "description": "This option has no description.",
+    "description": "Build-time dependencies (native architecture).\n\nTools needed during compilation that run on the build machine.\n",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[ pkgs.cmake pkgs.pkg-config pkgs.ninja ]"
+    },
     "loc": [
       "perSystem",
       "forge",

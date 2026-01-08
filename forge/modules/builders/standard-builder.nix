@@ -21,16 +21,29 @@ in
                 options = {
                   build.standardBuilder = {
                     enable = lib.mkEnableOption ''
-                      Standard builder.
-                    '';
+                      Standard builder for autotools, CMake, or Makefile-based projects.
+
+                      Automatically handles configure, build, and install phases'';
                     requirements = {
                       native = lib.mkOption {
                         type = lib.types.listOf lib.types.package;
                         default = [ ];
+                        description = ''
+                          Build-time dependencies (native architecture).
+
+                          Tools needed during compilation that run on the build machine.
+                        '';
+                        example = lib.literalExpression "[ pkgs.cmake pkgs.pkg-config pkgs.ninja ]";
                       };
                       build = lib.mkOption {
                         type = lib.types.listOf lib.types.package;
                         default = [ ];
+                        description = ''
+                          Runtime dependencies (target architecture).
+
+                          Libraries needed by the package at runtime.
+                        '';
+                        example = lib.literalExpression "[ pkgs.openssl pkgs.sqlite pkgs.zlib ]";
                       };
                     };
                   };

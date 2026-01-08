@@ -21,18 +21,21 @@ in
                 options = {
                   build.pythonPackageBuilder = {
                     enable = lib.mkEnableOption ''
-                      Python package builder.
-                    '';
+                      Python package builder for reusable Python libraries.
+
+                      Uses buildPythonPackage which allows the package to be used as a dependency by other packages'';
                     requirements = {
                       build-system = lib.mkOption {
                         type = lib.types.listOf lib.types.package;
                         default = [ ];
                         description = "PEP-517 build system dependencies.";
+                        example = lib.literalExpression "[ pkgs.python3Packages.setuptools pkgs.python3Packages.wheel ]";
                       };
                       dependencies = lib.mkOption {
                         type = lib.types.listOf lib.types.package;
                         default = [ ];
                         description = "Runtime dependencies (PEP-621).";
+                        example = lib.literalExpression "[ pkgs.python3Packages.numpy pkgs.python3Packages.attrs ]";
                       };
                       optional-dependencies = lib.mkOption {
                         type = lib.types.attrsOf (lib.types.listOf lib.types.package);

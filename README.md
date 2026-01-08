@@ -2,9 +2,9 @@
 
 **WARNING: this sofware is currently in alpha state of development.**
 
-Nix Forge is an attempt to lower the barrier and learning curve required for
-packaging and deploying software with Nix, enforce best practices and unlock the
-superpowers of Nix.
+Nix Forge is lowering the barrier and learning curve required for packaging,
+distributing and software deployment with Nix, enforcing best practices and
+unlocking the superpowers of Nix to the ordinary humans.
 
 
 ## Features
@@ -15,68 +15,65 @@ superpowers of Nix.
 
 * [Web UI](https://imincik.github.io/nix-forge)
 
-* [Recipe builder](https://imincik.github.io/nix-forge/options.html)
+* [Built-in packaging wizard](https://imincik.github.io/nix-forge/options.html)
+
+* [LLMs support](./AGENTS.md)
 
 * Easy [self hosting](#self-hosting)
 
-* [LLM support](./AGENTS.md)
-
-### Packages outputs
-
-* Shell environments
-* Container images
-* Development environments
-
-### Multi-component applications outputs
-
-* Shell environments (for CLI and GUI components)
-* Container images (for services)
-* NixOS systems (for services)
+* [Container registry](https://github.com/imincik/nix-forge-registry)
 
 
-## Packaging workflow
+### Conceptual diagram
 
-1. Create a new package recipe file in
-   `recipes/packages/<package>/recipe.nix` and add it to git.
+```mermaid
+graph TB
+    subgraph Sources["Sources"]
+        SW1[Git Repository]
+        SW2[Tarball URL]
+        SW3[Local Path]
+    end
 
-1. Build package
+    PKG[Package Recipe<br/>recipe.nix]
 
-```bash
-nix build .#<package> -L
+    subgraph PackageOutputs["Packages"]
+        PO4[Nix Package]
+        PO1[Development Environment]
+        PO2[Shell Environment]
+        PO3[Container Image]
+    end
+
+    APP[Application Recipe<br/>recipe.nix]
+
+    subgraph AppOutputs["Applications"]
+        AO1[Shell Environment<br/>CLI and GUI components]
+        AO2[Container Images<br/>Services]
+        AO3[NixOS VM<br/>Services]
+    end
+
+    NFR[Nix Forge Registry]
+
+    subgraph Deployment["Deployment"]
+        SHELL[Shell Environment<br/>CLI and GUI components]
+        K8S[Kubernetes Cluster<br/>Services]
+        NIXOS[NixOS System<br/>Services]
+    end
+
+    SW1 & SW2 & SW3 --> PKG
+    PKG --> PO1 & PO2 & PO3 & PO4
+
+    PO4 --> APP
+    APP --> AO1
+    APP --> AO2
+    APP --> AO3
+
+    PO3 --> NFR
+    AO2 --> NFR
+
+    AO1 --> SHELL
+    AO3 --> NIXOS
+    NFR --> K8S
 ```
-
-1. Inspect and test build output in `./result` directory
-
-1. Submit PR and wait for tests
-
-1. Publish package by merging the PR
-
-### Examples
-
-* [Package recipe examples](recipes/packages)
-
-* [Application recipe examples](recipes/apps)
-
-### Debugging
-
-Set `build.debug = true` and launch interactive package build
-environment by running
-
-```bash
-mkdir dev && cd dev
-nix develop .#<package>
-```
-
-and follow instructions.
-
-### Tests
-
-* Run package test
-
-```bash
-nix build .#<package>.test -L
-```
-
 
 ## Self hosting
 
@@ -90,7 +87,7 @@ nix flake init --template github:imincik/nix-forge#example
 
 * Add all new files to git
 
-* Create recipes  in `recipes` directory
+* Start creating recipes  in `recipes` directory
 
 
 ## LLM agents
@@ -98,8 +95,8 @@ nix flake init --template github:imincik/nix-forge#example
 LLM agents, read [these instructions](./AGENTS.md) first.
 
 
-## TODOs
+## Commercial support
 
-* CI checks and workflows (dependencies updates, ...)
-
-* Many more language speciffic builders and configuration options
+Need help with packaging software with [Nix](https://nixos.org/) or building
+a NixOS system ? Get in touch with [me](https://github.com/imincik) to discuss
+your project.

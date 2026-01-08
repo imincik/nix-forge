@@ -13,7 +13,6 @@ in
   imports = [
     ./assertions-warnings.nix
     ./builders/shared.nix
-    ./builders/plain-builder.nix
     ./builders/standard-builder.nix
     ./builders/python-app-builder.nix
     ./builders/python-package-builder.nix
@@ -29,20 +28,6 @@ in
               internal = true;
               type = lib.types.attrsOf (lib.types.listOf lib.types.str);
               default = {
-                plainBuilder = [
-                  "packages.*.name"
-                  "packages.*.version"
-                  "packages.*.source.git"
-                  "packages.*.source.patches"
-                  "packages.*.build.plainBuilder.enable"
-                  "packages.*.build.plainBuilder.requirements.native"
-                  "packages.*.build.plainBuilder.requirements.build"
-                  "packages.*.build.plainBuilder.configure"
-                  "packages.*.build.plainBuilder.build"
-                  "packages.*.build.plainBuilder.check"
-                  "packages.*.build.plainBuilder.install"
-                  "packages.*.test.script"
-                ];
                 standardBuilder = [
                   "packages.*.name"
                   "packages.*.version"
@@ -181,8 +166,8 @@ in
 
                     # Build configuration
                     build = {
-                      # Builder-specific options (plainBuilder, standardBuilder, pythonAppBuilder)
-                      # are defined in separate modular files in forge/modules/builders/ directory.
+                      # Builder-specific options are defined in separate modular
+                      # files in forge/modules/builders/ directory.
                       # Each builder module defines its own options and configuration logic.
 
                       # Common builder options (available to all builders)
@@ -323,13 +308,12 @@ in
                 }
                 {
                   condition =
-                    pkg.build.plainBuilder.enable
-                    || pkg.build.standardBuilder.enable
+                    pkg.build.standardBuilder.enable
                     || pkg.build.pythonAppBuilder.enable
                     || pkg.build.pythonPackageBuilder.enable;
                   message = ''
                     Package '${pkg.name}': one of builder options must be enabled.
-                    Available options: build.plainBuilder, build.standardBuilder, build.pythonAppBuilder, or build.pythonPackageBuilder.'';
+                    Available options: build.standardBuilder, build.pythonAppBuilder, or build.pythonPackageBuilder.'';
                 }
               ]) cfg
             );

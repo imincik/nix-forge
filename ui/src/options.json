@@ -16,6 +16,10 @@
   },
   "apps.*.containers.composeFile": {
     "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "null"
+    },
     "description": "Relative path to a container compose file.",
     "example": {
       "_type": "literalExpression",
@@ -30,7 +34,7 @@
       "composeFile"
     ],
     "readOnly": false,
-    "type": "absolute path"
+    "type": "null or absolute path"
   },
   "apps.*.containers.enable": {
     "declarations": [],
@@ -56,7 +60,15 @@
   },
   "apps.*.containers.images": {
     "declarations": [],
-    "description": "This option has no description.",
+    "default": {
+      "_type": "literalExpression",
+      "text": "[ ]"
+    },
+    "description": "List of container images to build.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "[\n  {\n    name = \"api\";\n    requirements = [ mypkgs.my-package ];\n    config.CMD = [ \"my-command\" ];\n  }\n]\n"
+    },
     "loc": [
       "perSystem",
       "forge",

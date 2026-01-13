@@ -10,16 +10,12 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-
     flake-parts.url = "github:hercules-ci/flake-parts";
-
     import-tree.url = "github:vic/import-tree";
-
     elm2nix = {
       url = "github:dwayne/elm2nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nix-utils = {
       url = "github:imincik/nix-utils";
       flake = false;

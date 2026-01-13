@@ -39,9 +39,8 @@ jobs:
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
 
-      # FIXME: avoid building with disabled sandbox
       - name: Build UI
-        run: nix build .#_forge-ui --accept-flake-config --option sandbox relaxed
+        run: nix build .#_forge-ui --accept-flake-config
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

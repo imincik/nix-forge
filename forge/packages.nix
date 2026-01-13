@@ -6,6 +6,7 @@
       config,
       lib,
       pkgs,
+      system,
       ...
     }:
 
@@ -51,6 +52,7 @@
 
         _forge-ui = pkgs.callPackage ../ui/package.nix {
           inherit (config.packages) _forge-config _forge-options;
+          buildElmApplication = (inputs.elm2nix.lib.elm2nix pkgs).buildElmApplication;
         };
       };
     };

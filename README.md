@@ -32,6 +32,7 @@ graph TB
         SW1[Git Repository]
         SW2[Tarball URL]
         SW3[Local Path]
+        NIXPKGS(Nixpkgs)
     end
 
     PKG[Package Recipe<br/>recipe.nix]
@@ -46,23 +47,23 @@ graph TB
     APP[Application Recipe<br/>recipe.nix]
 
     subgraph AppOutputs["Applications"]
-        AO1[Shell Environment<br/>CLI and GUI components]
-        AO2[Container Images<br/>Services]
-        AO3[NixOS VM<br/>Services]
+        AO1[Shell Environment<br/>for CLI and GUI components]
+        AO2[Container Images<br/>for Multi-component services]
+        AO3[NixOS VM<br/>for Multi-component services]
     end
 
     NFR[Nix Forge Registry]
 
     subgraph Deployment["Deployment"]
-        SHELL[Shell Environment<br/>CLI and GUI components]
-        K8S[Kubernetes Cluster<br/>Services]
-        NIXOS[NixOS System<br/>Services]
+        SHELL[Shell Environment<br/>for CLI and GUI components]
+        K8S[Kubernetes Cluster<br/>for Multi-component services]
+        NIXOS[NixOS System<br/>for Multi-component services]
     end
 
-    SW1 & SW2 & SW3 --> PKG
+    SW1 & SW2 & SW3 & NIXPKGS--> PKG
     PKG --> PO1 & PO2 & PO3 & PO4
 
-    PO4 --> APP
+    PO4 & NIXPKGS --> APP
     APP --> AO1
     APP --> AO2
     APP --> AO3

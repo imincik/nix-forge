@@ -15,6 +15,11 @@
 
     import-tree.url = "github:vic/import-tree";
 
+    elm2nix = {
+      url = "github:dwayne/elm2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-utils = {
       url = "github:imincik/nix-utils";
       flake = false;

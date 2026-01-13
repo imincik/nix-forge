@@ -33,8 +33,7 @@
 
     {
       checks = {
-        inherit (config.packages) _forge-config _forge-options;
-        # inherit (config.packages) _forge-ui;
+        inherit (config.packages) _forge-config _forge-options _forge-ui;
       }
       // allPackages
 

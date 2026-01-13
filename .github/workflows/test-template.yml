@@ -59,10 +59,9 @@ jobs:
           nix build .#hello-app.containers --accept-flake-config
           nix build .#hello-app.vm --accept-flake-config
 
-      # FIXME: avoid building with disabled sandbox
       - name: Build _forge-ui
         working-directory: /tmp/template-test
         run: |
-          nix build .#_forge-ui --accept-flake-config --option sandbox relaxed
+          nix build .#_forge-ui --accept-flake-config
           test -f result/index.html
           test -f result/forge-config.json

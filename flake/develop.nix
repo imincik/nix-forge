@@ -6,6 +6,7 @@
       config,
       lib,
       pkgs,
+      system,
       ...
     }:
 
@@ -16,6 +17,7 @@
           jq
           live-server
 
+          inputs.elm2nix.packages.${system}.default
           elmPackages.elm
         ];
 

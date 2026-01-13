@@ -1,45 +1,52 @@
 {
-  stdenv,
+  buildElmApplication,
+  symlinkJoin,
 
-  elmPackages,
   _forge-config,
   _forge-options,
 }:
 
-stdenv.mkDerivation {
-  # FIXME: avoid building with disabled sandbox
-  # nix build .#forge-config --option sandbox relaxed --builders ""
-  __noChroot = true;
+let
+  main = buildElmApplication {
+    pname = "forge-ui-elm";
+    version = "0.1.0";
+    src = ./.;
+    elmLock = ./elm.lock;
+    entry = [ "src/Main.elm" ];
+    output = "main.js";
+    doMinification = true;
+    enableOptimizations = true;
+  };
 
-  pname = "forge-ui";
-  version = "0.1.0";
-
-  src = ./.;
-
-  buildInputs = [
-    elmPackages.elm
+  options = buildElmApplication {
+    pname = "forge-ui-options";
+    version = "0.1.0";
+    src = ./.;
+    elmLock = ./elm.lock;
+    entry = [ "src/OptionsMain.elm" ];
+    output = "options.js";
+    doMinification = true;
+    enableOptimizations = true;
+  };
+in
+symlinkJoin {
+  name = "forge-ui";
+  paths = [
+    main
+    options
   ];
+  postBuild = ''
+    # Copy static files
+    cp ${./src/index.html} $out/index.html
+    cp ${./src/options.html} $out/options.html
+    cp -r ${./src/resources} $out/resources
 
-  buildPhase = ''
-    export HOME=$(mktemp -d)
-    mkdir build
-
-    elm make src/Main.elm --optimize --output=build/main.js
-    elm make src/OptionsMain.elm --optimize --output=build/options.js
-  '';
-
-  installPhase = ''
-    mkdir $out
-    mkdir $out/docs
-
-    cp src/index.html $out
-    cp build/main.js $out
-    cp src/options.html $out
-    cp build/options.js $out
-
-    cp -a src/resources $out
-
-    ln -s ${_forge-config} $out/forge-config.json 
+    # Symlink config files
+    ln -s ${_forge-config} $out/forge-config.json
     ln -s ${_forge-options} $out/options.json
+
+    # Rename minimized Elm outputs
+    mv $out/main.min.js $out/main.js
+    mv $out/options.min.js $out/options.js
   '';
 }

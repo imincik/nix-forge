@@ -30,6 +30,5 @@ jobs:
       - name: Run checks
         run: nix flake check --accept-flake-config
 
-      # FIXME: avoid building with disabled sandbox
       - name: Check UI build
-        run: nix build .#_forge-ui --accept-flake-config --option sandbox relaxed
+        run: nix build .#_forge-ui --accept-flake-config

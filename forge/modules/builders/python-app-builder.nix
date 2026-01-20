@@ -97,15 +97,13 @@ in
               cfg = config.forge.packages;
 
               pythonAppBuilderPkgs = lib.listToAttrs (
-                map (pkg: rec {
+                map (pkg: {
                   name = pkg.name;
                   value = pkgs.callPackage (
                     # Derivation start
-                    # buildPythonPackage doesn't support finalAttrs function.
-                    # Passing thePackage to derivation is used as workaround.
-                    { stdenv, thePackage }:
+                    { }:
                     pkgs.python3Packages.buildPythonApplication (
-                      {
+                      finalAttrs: {
                         pname = pkg.name;
                         version = pkg.version;
                         format = "pyproject";
@@ -117,14 +115,14 @@ in
                         pythonImportsCheck = pkg.build.pythonAppBuilder.importsCheck;
                         pythonRelaxDeps = pkg.build.pythonAppBuilder.relaxDeps;
                         disabledTests = pkg.build.pythonAppBuilder.disabledTests;
-                        passthru = sharedBuildAttrs.pkgPassthru pkg thePackage;
+                        passthru = sharedBuildAttrs.pkgPassthru pkg finalAttrs.finalPackage;
                         meta = sharedBuildAttrs.pkgMeta pkg;
                       }
                       // pkg.build.extraDrvAttrs
                       // lib.optionalAttrs pkg.build.debug sharedBuildAttrs.debugShellHookAttr
                     )
                     # Derivation end
-                  ) { thePackage = value; };
+                  ) { };
                 }) (lib.filter (p: p.build.pythonAppBuilder.enable == true) cfg)
               );
             in

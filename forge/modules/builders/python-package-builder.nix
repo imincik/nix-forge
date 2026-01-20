@@ -97,15 +97,13 @@ in
               cfg = config.forge.packages;
 
               pythonPackageBuilderPkgs = lib.listToAttrs (
-                map (pkg: rec {
+                map (pkg: {
                   name = pkg.name;
                   value = pkgs.callPackage (
                     # Derivation start
-                    # buildPythonPackage doesn't support finalAttrs function.
-                    # Passing thePackage to derivation is used as workaround.
-                    { stdenv, thePackage }:
+                    { }:
                     pkgs.python3Packages.buildPythonPackage (
-                      {
+                      finalAttrs: {
                         pname = pkg.name;
                         version = pkg.version;
                         format = "pyproject";
@@ -117,14 +115,14 @@ in
                         pythonImportsCheck = pkg.build.pythonPackageBuilder.importsCheck;
                         pythonRelaxDeps = pkg.build.pythonPackageBuilder.relaxDeps;
                         disabledTests = pkg.build.pythonPackageBuilder.disabledTests;
-                        passthru = sharedBuildAttrs.pkgPassthru pkg thePackage;
+                        passthru = sharedBuildAttrs.pkgPassthru pkg finalAttrs.finalPackage;
                         meta = sharedBuildAttrs.pkgMeta pkg;
                       }
                       // pkg.build.extraDrvAttrs
                       // lib.optionalAttrs pkg.build.debug sharedBuildAttrs.debugShellHookAttr
                     )
                     # Derivation end
-                  ) { thePackage = value; };
+                  ) { };
                 }) (lib.filter (p: p.build.pythonPackageBuilder.enable == true) cfg)
               );
             in

@@ -98,6 +98,5 @@ LLM agents, read [these instructions](./AGENTS.md) first.
 
 ## Commercial support
 
-Need help with packaging software with [Nix](https://nixos.org/) or building
-a NixOS system ? Get in touch with [me](https://github.com/imincik) to discuss
-your project.
+Considering [Nix/NixOS](https://nixos.org/) or already using it and need expert
+help? Get in touch with [me](https://www.imincik.com).

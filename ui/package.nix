@@ -42,7 +42,8 @@ symlinkJoin {
     cp ${./src/index.html} $out/index.html
     cp ${./src/options.html} $out/options.html
     cp -r ${./src/resources} $out/resources
-    cp ${agentsFile} $out/AGENTS.md
+    chmod -R u+w $out/resources
+    cp ${agentsFile} $out/resources/AGENTS.md
 
     # Symlink config files
     ln -s ${_forge-config} $out/forge-config.json

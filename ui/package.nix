@@ -28,6 +28,8 @@ let
     doMinification = true;
     enableOptimizations = true;
   };
+
+  agentsFile = ../AGENTS.md;
 in
 symlinkJoin {
   name = "forge-ui";
@@ -40,6 +42,7 @@ symlinkJoin {
     cp ${./src/index.html} $out/index.html
     cp ${./src/options.html} $out/options.html
     cp -r ${./src/resources} $out/resources
+    cp ${agentsFile} $out/AGENTS.md
 
     # Symlink config files
     ln -s ${_forge-config} $out/forge-config.json

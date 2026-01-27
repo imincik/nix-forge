@@ -327,10 +327,14 @@ initialInstructionsHtml : Html Msg
 initialInstructionsHtml =
     div []
         [ h2 [] [ text "NEW RECIPE" ]
-        , p [ style "margin-bottom" "0em" ] [ text "Configure options and click 'Create recipe'" ]
+        , p [ style "margin-bottom" "0em" ] [ text "Configure recipe options and click on 'Create recipe' button," ]
         , br [] []
-        , p [ style "margin-bottom" "0em" ] [ text "Or, generate package and application recipes using LLM" ]
-        , codeBlock llmPromptText
+        , p [ style "margin-bottom" "0em" ]
+            [ text "or use LLM to generate recipes using provided "
+            , a [ href "./AGENTS.md", class "text-warning" ] [ text "AGENTS.md" ]
+            , text " file"
+            ]
+        , codeBlock agentsPromptText
         ]
 
 
@@ -790,11 +794,11 @@ generateRecipeContent category options =
         |> String.join "\n"
 
 
-llmPromptText : String
-llmPromptText =
-    """Based on instructions in AGENTS.md file,
-analyze the <SOURCE-CODE-REPOSITORY-URL> and create a Nix Forge
-package and application recipes.
+agentsPromptText : String
+agentsPromptText =
+    """Based on instructions in AGENTS.md file, analyze the source code
+located in <SOURCE-CODE-LOCATION> and create a Nix Forge package
+and application recipes.
 """
 
 

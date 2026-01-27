@@ -5,7 +5,7 @@ import Browser.Navigation as Nav
 import ConfigDecoder exposing (Config, OptionsFilter, configDecoder)
 import Dict
 import Html exposing (Html, a, br, button, code, div, h2, h5, hr, input, p, pre, small, span, text, textarea)
-import Html.Attributes exposing (class, href, placeholder, rows, style, value)
+import Html.Attributes exposing (class, href, placeholder, rows, style, target, value)
 import Html.Events exposing (onClick, onInput)
 import Http
 import OptionsDecoder exposing (Option, OptionsData, optionsDecoder)
@@ -331,7 +331,7 @@ initialInstructionsHtml =
         , br [] []
         , p [ style "margin-bottom" "0em" ]
             [ text "or use LLM to generate recipes using provided "
-            , a [ href "./AGENTS.md", class "text-warning" ] [ text "AGENTS.md" ]
+            , a [ href "./resources/AGENTS.md", class "text-warning", target "_blank" ] [ text "AGENTS.md" ]
             , text " file"
             ]
         , codeBlock agentsPromptText

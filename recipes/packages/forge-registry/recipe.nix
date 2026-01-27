@@ -26,6 +26,11 @@
     requirements.dependencies = [
       pkgs.python3Packages.flask
     ];
+    requirements.optional-dependencies = {
+      production = [
+        pkgs.python3Packages.gunicorn
+      ];
+    };
     importsCheck = [
       "app"
       "registry"

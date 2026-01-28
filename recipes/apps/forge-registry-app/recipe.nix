@@ -14,11 +14,7 @@
     and allows to load Nix Forge containers directly to Docker, Podman or
     Kubernetes.
 
-    * Deploy registry in a shell environment (see instructions below)
-       and launch it
-    ```
-      forge-registry
-    ```
+    * Deploy registry in a shell environment or in a VM (see instructions below)
 
     * Launch example package container with Podman
     ```
@@ -61,49 +57,92 @@
   #   composeFile = ./compose.yaml;
   # };
 
-  # TODO: enable VM
-  # vm = {
-  #   enable = true;
-  #   name = "forge-registry";
-  #   requirements = [
-  #     pkgs.mypkgs.forge-registry
-  #     pkgs.nix
-  #   ];
-  #   config = {
-  #     ports = [ "6443:6443" ];
-  #     system = {
-  #       systemd.services.forge-registry = {
-  #         description = "Nix Forge container registry";
-  #         wantedBy = [ "multi-user.target" ];
-  #         after = [ "network.target" ];
-  #         environment = {
-  #           FLASK_HOST = "0.0.0.0";
-  #           FLASK_PORT = "6443";
-  #           GITHUB_REPO = "github:imincik/nix-forge";
-  #           LOG_LEVEL = "INFO";
-  #         };
-  #         serviceConfig = {
-  #           Type = "simple";
-  #           ExecStart = "${pkgs.mypkgs.forge-registry}/bin/forge-registry";
-  #           Restart = "on-failure";
-  #           RestartSec = "5s";
-  #         };
-  #         path = [ pkgs.nix ];
-  #       };
-  #       nix.settings = {
-  #         trusted-users = [
-  #           "root"
-  #           "@wheel"
-  #           "@trusted"
-  #         ];
-  #         experimental-features = [
-  #           "flakes"
-  #           "nix-command"
-  #         ];
-  #       };
-  #     };
-  #     memorySize = 1024 * 4;
-  #     diskSize = 1024 * 10;
-  #   };
-  # };
+  vm = {
+    enable = true;
+    name = "forge-registry";
+    config = {
+      ports = [ "6443:6443" ];
+      system = {
+        # User and group
+        users.users.forge-registry = {
+          isSystemUser = true;
+          group = "forge-registry";
+          home = "/var/lib/forge-registry";
+          createHome = true;
+        };
+        users.groups.forge-registry = { };
+        nix.settings.trusted-users = [ "forge-registry" ];
+
+        # Service
+        systemd.services.forge-registry = {
+          description = "Nix Forge container registry";
+          wantedBy = [ "multi-user.target" ];
+          after = [ "network.target" ];
+          path = [ pkgs.nix ];
+          environment = {
+            FLASK_HOST = "127.0.0.1";
+            FLASK_PORT = "6444";
+            GITHUB_REPO = "github:imincik/nix-forge";
+            LOG_LEVEL = "INFO";
+          };
+          serviceConfig = {
+            Type = "simple";
+            ExecStart = ''
+              ${pkgs.mypkgs.forge-registry.prodEnv}/bin/gunicorn \
+                --bind 127.0.0.1:6444 \
+                --workers 4 \
+                --timeout 600 \
+                --access-logfile - \
+                --error-logfile - \
+                --pythonpath ${pkgs.mypkgs.forge-registry.prodEnv}/${pkgs.python3.sitePackages} \
+                app:app
+            '';
+            User = "forge-registry";
+            Group = "forge-registry";
+            Restart = "on-failure";
+            RestartSec = "5s";
+            WorkingDirectory = "/var/lib/forge-registry";
+            StateDirectory = "forge-registry";
+          };
+        };
+
+        # Reverse proxy
+        services.nginx = {
+          enable = true;
+          recommendedProxySettings = true;
+          recommendedTlsSettings = true;
+          recommendedOptimisation = true;
+          recommendedGzipSettings = true;
+
+          virtualHosts.forge-registry = {
+            default = true;
+            enableACME = false;
+            listen = [
+              {
+                addr = "0.0.0.0";
+                port = 6443;
+              }
+            ];
+            locations."/" = {
+              proxyPass = "http://127.0.0.1:6444";
+              proxyWebsockets = true;
+            };
+          };
+        };
+
+        # Nix configuration
+        nix.settings = {
+          experimental-features = [
+            "flakes"
+            "nix-command"
+          ];
+        };
+      };
+
+      # VM configuration
+      cores = 4;
+      memorySize = 1024 * 8;
+      diskSize = 1024 * 40;
+    };
+  };
 }

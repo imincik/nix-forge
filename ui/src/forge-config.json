@@ -19,13 +19,99 @@
       "vm": {
         "config": {
           "cores": 4,
-          "diskSize": 4096,
-          "memorySize": 2048,
-          "ports": [],
-          "system": {}
+          "diskSize": 40960,
+          "memorySize": 8192,
+          "ports": [
+            "6443:6443"
+          ],
+          "system": {
+            "nix": {
+              "settings": {
+                "experimental-features": [
+                  "flakes",
+                  "nix-command"
+                ],
+                "trusted-users": [
+                  "forge-registry"
+                ]
+              }
+            },
+            "services": {
+              "nginx": {
+                "enable": true,
+                "recommendedGzipSettings": true,
+                "recommendedOptimisation": true,
+                "recommendedProxySettings": true,
+                "recommendedTlsSettings": true,
+                "virtualHosts": {
+                  "forge-registry": {
+                    "default": true,
+                    "enableACME": false,
+                    "listen": [
+                      {
+                        "addr": "0.0.0.0",
+                        "port": 6443
+                      }
+                    ],
+                    "locations": {
+                      "/": {
+                        "proxyPass": "http://127.0.0.1:6444",
+                        "proxyWebsockets": true
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "systemd": {
+              "services": {
+                "forge-registry": {
+                  "after": [
+                    "network.target"
+                  ],
+                  "description": "Nix Forge container registry",
+                  "environment": {
+                    "FLASK_HOST": "127.0.0.1",
+                    "FLASK_PORT": "6444",
+                    "GITHUB_REPO": "github:imincik/nix-forge",
+                    "LOG_LEVEL": "INFO"
+                  },
+                  "path": [
+                    "/nix/store/h61v9ad1mjz392vm8ki2si1iyinda69f-nix-2.31.2+2"
+                  ],
+                  "serviceConfig": {
+                    "ExecStart": "/nix/store/xm8rha9103rvr1y2f4vaq2c6k70m374k-forge-registry-prod-env/bin/gunicorn \\\n  --bind 127.0.0.1:6444 \\\n  --workers 4 \\\n  --timeout 600 \\\n  --access-logfile - \\\n  --error-logfile - \\\n  --pythonpath /nix/store/xm8rha9103rvr1y2f4vaq2c6k70m374k-forge-registry-prod-env/lib/python3.13/site-packages \\\n  app:app\n",
+                    "Group": "forge-registry",
+                    "Restart": "on-failure",
+                    "RestartSec": "5s",
+                    "StateDirectory": "forge-registry",
+                    "Type": "simple",
+                    "User": "forge-registry",
+                    "WorkingDirectory": "/var/lib/forge-registry"
+                  },
+                  "wantedBy": [
+                    "multi-user.target"
+                  ]
+                }
+              }
+            },
+            "users": {
+              "groups": {
+                "forge-registry": {}
+              },
+              "users": {
+                "forge-registry": {
+                  "createHome": true,
+                  "group": "forge-registry",
+                  "home": "/var/lib/forge-registry",
+                  "isSystemUser": true
+                }
+              }
+            }
+          }
         },
-        "enable": false,
-        "name": "nixos-vm",
+        "enable": true,
+        "name": "forge-registry",
         "requirements": []
       }
     },

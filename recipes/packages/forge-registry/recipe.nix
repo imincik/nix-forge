@@ -26,16 +26,33 @@
     requirements.dependencies = [
       pkgs.python3Packages.flask
     ];
+    requirements.optional-dependencies = {
+      production = [
+        pkgs.python3Packages.gunicorn
+      ];
+    };
     importsCheck = [
       "app"
       "registry"
     ];
   };
 
-  build.extraDrvAttrs = {
-    passthru = {
-      # Provide gunicorn as a passthru output available for production deployment
-      gunicorn = pkgs.python3Packages.gunicorn;
+  build.extraDrvAttrs =
+    # Python environment for production deployment
+    let
+      pythonEnv = pkgs.python3.withPackages (
+        ps:
+        pkgs.mypkgs.forge-registry.dependencies
+        ++ pkgs.mypkgs.forge-registry.optional-dependencies.production
+      );
+    in
+    {
+      passthru.prodEnv = pkgs.symlinkJoin {
+        name = "forge-registry-prod-env";
+        paths = [
+          pythonEnv
+          pkgs.mypkgs.forge-registry
+        ];
+      };
     };
-  };
 }

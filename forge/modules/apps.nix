@@ -48,6 +48,7 @@ in
                   "apps.*.vm.requirements"
                   "apps.*.vm.config.system"
                   "apps.*.vm.config.ports"
+                  "apps.*.vm.config.cores"
                   "apps.*.vm.config.memorySize"
                   "apps.*.vm.config.diskSize"
                 ];
@@ -177,6 +178,12 @@ in
                             [ "10022:22" "5432:5432" "8000:90" ]
                           '';
                         };
+                        cores = lib.mkOption {
+                          type = lib.types.int;
+                          default = 4;
+                          description = "Number of CPU cores available to VM.";
+                          example = 8;
+                        };
                         memorySize = lib.mkOption {
                           type = lib.types.int;
                           default = 1024 * 2;
@@ -283,6 +290,7 @@ in
                         networking.useDHCP = lib.mkForce true;
                         networking.firewall.enable = lib.mkForce false;
                         virtualisation.graphics = false;
+                        virtualisation.cores = app.vm.config.cores;
                         virtualisation.memorySize = app.vm.config.memorySize;
                         virtualisation.diskSize = app.vm.config.diskSize;
                         virtualisation.forwardPorts = forwardPortsAttrs app.vm.config.ports;

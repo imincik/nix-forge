@@ -249,6 +249,29 @@
     "readOnly": false,
     "type": "string"
   },
+  "apps.*.vm.config.cores": {
+    "declarations": [],
+    "default": {
+      "_type": "literalExpression",
+      "text": "4"
+    },
+    "description": "Number of CPU cores available to VM.",
+    "example": {
+      "_type": "literalExpression",
+      "text": "8"
+    },
+    "loc": [
+      "perSystem",
+      "forge",
+      "apps",
+      "*",
+      "vm",
+      "config",
+      "cores"
+    ],
+    "readOnly": false,
+    "type": "signed integer"
+  },
   "apps.*.vm.config.diskSize": {
     "declarations": [],
     "default": {
